@@ -127,14 +127,6 @@ export function LoginForm() {
               )}
             </Button>
           </div>
-
-          {/* Footer */}
-          <p className="text-center text-sm text-muted-foreground">
-            Don’t have an account?{" "}
-            <span className="underline cursor-pointer hover:text-primary">
-              Sign up
-            </span>
-          </p>
         </CardContent>
       </Card>
     </div>
