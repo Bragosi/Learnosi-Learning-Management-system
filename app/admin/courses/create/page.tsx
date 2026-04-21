@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { Uploader } from "@/components/file-uploader/Uploader";
 export default function CreateCoursePage() {
   const form = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
@@ -143,15 +144,7 @@ export default function CreateCoursePage() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <RichTextEditor/>
-                        {/** 
-                             <Textarea
-                          placeholder="Description"
-                          className="min-h-30"
-                          {...field}
-                        />
-                         */}
-
+                        <RichTextEditor field={field}/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -166,7 +159,8 @@ export default function CreateCoursePage() {
                     <FormItem>
                       <FormLabel>File Key</FormLabel>
                       <FormControl>
-                        <Input placeholder="Thumbnail url" {...field} />
+                        <Uploader />
+                    { /**  <Input placeholder="Thumbnail url" {...field} />*/}
                       </FormControl>
                       <FormMessage />
                     </FormItem>

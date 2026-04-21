@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/public/globe.svg";
+import Logo from "@/public/Learnosi Logo.png";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -51,7 +51,7 @@ export default function NavBar({
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src={Logo} alt="Logo" width={30} height={30} />
+          <Image src={Logo} alt="Logo" width={50} height={50} />
           <span className="text-lg font-bold tracking-tight">LearnOSI</span>
         </Link>
 

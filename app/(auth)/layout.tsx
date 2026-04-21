@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-import Logo from "@/public/globe.svg";
+import Logo from "@/public/Learnosi Logo.png";
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex min-h-svh flex-col items-center justify-center">
@@ -22,8 +22,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           className="flex items-center gap-2 self-center font-medium "
           href="/"
         >
-          <Image src={Logo} alt="Logo" width={32} height={32} />
-          Learnosi
+          <Image src={Logo} alt="Logo" width={80} height={80} />
         </Link>
         {children}
 

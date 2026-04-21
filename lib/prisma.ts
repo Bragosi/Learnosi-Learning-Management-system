@@ -1,4 +1,5 @@
-// lib/prisma.ts
+import "server-only"
+
 import { PrismaClient } from "./generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 

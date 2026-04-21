@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/public/globe.svg";
+import Logo from "@/public/Learnosi Logo.png";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -161,7 +161,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <Link href="#">
-                <Image src={Logo} alt="Learnosi" />
+                <Image src={Logo} width={50} height={50} alt="Learnosi" />
                 <span className="text-base font-semibold">Learnosi</span>
               </Link>
             </SidebarMenuButton>
