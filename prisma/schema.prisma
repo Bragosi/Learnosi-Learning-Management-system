@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -105,9 +104,11 @@ model Course {
 }
 
 enum CourseLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
+  LEVEL_100
+  LEVEL_200
+  LEVEL_300
+  LEVEL_400
+  LEVEL_500
 }
 
 enum CourseStatus {

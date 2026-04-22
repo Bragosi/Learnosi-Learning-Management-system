@@ -9,6 +9,10 @@ import {
   type FieldPath,
   type FieldValues,
 } from "react-hook-form";
+import { createContext, useContext } from "react";
+
+
+const FormFieldContext = createContext<{ name: string } | null>(null);
 
 type FormProps<TFieldValues extends FieldValues> = {
   children: React.ReactNode;
@@ -24,8 +28,20 @@ export function Form<TFieldValues extends FieldValues>({
 export function FormField<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
->({ ...props }: ControllerProps<TFieldValues, TName>) {
-  return <Controller {...props} />;
+>({ name, ...props }: ControllerProps<TFieldValues, TName>) {
+  return (
+    <FormFieldContext.Provider value={{ name }}>
+      <Controller name={name} {...props} />
+    </FormFieldContext.Provider>
+  );
+}
+
+export function useFormField() {
+  const context = useContext(FormFieldContext);
+  if (!context) {
+    throw new Error("useFormField must be used inside FormField");
+  }
+  return context;
 }
 
 export function FormItem({ children }: { children: React.ReactNode }) {
@@ -49,11 +65,10 @@ export function FormControl({
 }
 
 export function FormMessage() {
-  const {
-    formState: { errors },
-  } = useFormContext();
+  const { formState } = useFormContext();
+  const { name } = useFormField();
 
-  const error = Object.values(errors)[0];
+  const error = formState.errors[name as keyof typeof formState.errors];
 
   if (!error) return null;
 

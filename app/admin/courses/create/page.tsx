@@ -1,4 +1,5 @@
 "use client";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { courseCategory, courseLevel, courseSchema, courseStatus } from "@/lib/zodSchema";
-import { ArrowLeft, PlusIcon, SparkleIcon } from "lucide-react";
+import {
+  courseCategory,
+  courseLevel,
+  courseSchema,
+  courseStatus,
+  levelLabels,
+} from "@/lib/zodSchema";
+import { ArrowLeft, Loader, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,31 +40,56 @@ import {
 } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "./action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 export default function CreateCoursePage() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
+    mode: "onChange",
     defaultValues: {
       title: "",
       description: "",
-      filekey: "",
+      fileKey: "",
       price: 0,
       duration: 0,
-      level: "100 Level",
+      level: "LEVEL_100",
       category: "Computing",
       smallDescription: "",
       slug: "",
-      status: "Draft",
+      status: "DRAFT",
     },
   });
 
   function onSubmit(data: z.infer<typeof courseSchema>) {
-    // Do something with the form values.
-    console.log(data);
+    startTransition(async () => {
+      // FIX: pass 'data' instead of 'values'
+      const { data: result, error } = await tryCatch(CreateCourse(data));
+
+      if (error) {
+        toast.error("An Unexpected Error occurred. Please try again.");
+        return;
+      }
+
+      if (result?.status === "success") {
+        toast.success(result.message);
+        form.reset();
+        router.push("/admin/courses");
+      } else if (result?.status === "error") {
+        toast.error(result.message);
+      }
+    });
   }
 
   return (
     <>
-      <div className="flex items-center gap-4 ">
+      <div className="flex items-center gap-4">
         <Link
           href="/admin/courses"
           className={buttonVariants({ variant: "outline", size: "icon" })}
@@ -66,7 +98,7 @@ export default function CreateCoursePage() {
         </Link>
         <h1 className="text-2xl font-bold">Create Course</h1>
       </div>
-      <Card>
+      <Card className="mt-6">
         <CardHeader>
           <CardTitle>Basic Information</CardTitle>
           <CardDescription>
@@ -110,7 +142,11 @@ export default function CreateCoursePage() {
                   className="w-fit"
                   onClick={() => {
                     const titleValue = form.getValues("title");
-                    const slug = slugify(titleValue);
+                    // Good practice: strict mode handles special characters properly
+                    const slug = slugify(titleValue, {
+                      lower: true,
+                      strict: true,
+                    });
                     form.setValue("slug", slug, { shouldValidate: true });
                   }}
                 >
@@ -121,7 +157,7 @@ export default function CreateCoursePage() {
                 control={form.control}
                 name="smallDescription"
                 render={({ field }) => (
-                  <div className="w-full ">
+                  <div className="w-full">
                     <FormItem>
                       <FormLabel>Small Description</FormLabel>
                       <FormControl>
@@ -135,16 +171,16 @@ export default function CreateCoursePage() {
                     </FormItem>
                   </div>
                 )}
-              />{" "}
+              />
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <div className="w-full ">
+                  <div className="w-full">
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <RichTextEditor field={field}/>
+                        <RichTextEditor field={field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -153,26 +189,28 @@ export default function CreateCoursePage() {
               />
               <FormField
                 control={form.control}
-                name="filekey"
+                name="fileKey"
                 render={({ field }) => (
-                  <div className="w-full ">
+                  <div className="w-full">
                     <FormItem>
-                      <FormLabel>File Key</FormLabel>
+                      <FormLabel>Thumbnail Image</FormLabel>
                       <FormControl>
-                        <Uploader />
-                    { /**  <Input placeholder="Thumbnail url" {...field} />*/}
+                        <Uploader
+                          onChange={field.onChange}
+                          value={field.value}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   </div>
                 )}
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4   ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="category"
                   render={({ field }) => (
-                    <div className="w-full ">
+                    <div className="w-full">
                       <FormItem>
                         <FormLabel>Category</FormLabel>
                         <Select
@@ -201,7 +239,7 @@ export default function CreateCoursePage() {
                   control={form.control}
                   name="level"
                   render={({ field }) => (
-                    <div className="w-full ">
+                    <div className="w-full">
                       <FormItem>
                         <FormLabel>Level</FormLabel>
                         <Select
@@ -214,9 +252,9 @@ export default function CreateCoursePage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {courseLevel.map((levels) => (
-                              <SelectItem key={levels} value={levels}>
-                                {levels}
+                            {courseLevel.map((level) => (
+                              <SelectItem key={level} value={level}>
+                                {levelLabels[level]}{" "}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -226,7 +264,6 @@ export default function CreateCoursePage() {
                     </div>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="duration"
@@ -247,7 +284,6 @@ export default function CreateCoursePage() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="price"
@@ -269,39 +305,49 @@ export default function CreateCoursePage() {
                   )}
                 />
               </div>
-                              <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <div className="w-full ">
-                      <FormItem>
-                        <FormLabel>Status</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Level" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {courseStatus.map((status) => (
-                              <SelectItem key={status} value={status}>
-                                {status}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    </div>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <div className="w-full">
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {courseStatus.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {status}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
+                )}
+              />
 
-                <Button>
-                  Create Course <PlusIcon className="ml-1 size-4"/>
-                </Button>
+              {/* FIX: Removed <p> from inside the button for valid HTML */}
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <span className="flex items-center">
+                    <Loader className="animate-spin size-4 mr-2" />
+                    Creating Course...
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    Create Course <PlusIcon className="ml-2 size-4" />
+                  </span>
+                )}
+              </Button>
             </form>
           </Form>
         </CardContent>
