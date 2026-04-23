@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url = env("DATABASE_URL")
 }
 
 model User {
@@ -95,7 +94,7 @@ model Course {
 
   userId String
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  chapter Chapter[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -115,4 +114,40 @@ enum CourseStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+model Chapter {
+  id String @id @default(uuid())
+  title String
+  position Int
+
+  courseId String
+  Course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, position])
+}
+
+model Lesson {
+  id String @id @default(uuid())
+
+  title String
+  description String?
+  thumbnailKey String?
+  videoKey String?
+  pdf String?
+
+  position Int
+
+  chapterId String
+  Chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chapterId, position])
 }
