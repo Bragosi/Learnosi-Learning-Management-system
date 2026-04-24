@@ -12,6 +12,7 @@ import { useConstructUrl } from "@/hooks/useContructUrl";
 import { levelLabels } from "@/lib/zodSchema";
 import {
   ArrowRight,
+  Building,
   Eye,
   MoreVerticalIcon,
   Pencil,
@@ -65,7 +66,7 @@ export function AdminCoursecard({ data }: iAppProps) {
       <div className="relative aspect-video overflow-hidden">
         <Image
           src={thumbnailUrl}
-          alt={data.title}
+          alt={data.courseTitle}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -77,23 +78,28 @@ export function AdminCoursecard({ data }: iAppProps) {
           href={`/admin/courses/${data.id}`}
           className="font-semibold text-lg line-clamp-2 hover:text-primary transition-colors"
         >
-          {data.title}
+          {data.courseCode}
         </Link>
 
         {/* Description */}
         <p className="text-sm text-muted-foreground line-clamp-2">
-          {data.smallDescription}
+          {data.courseTitle}
         </p>
 
         {/* Meta Info */}
         <div className="flex flex-col gap-2 pt-2">
           <div className="flex items-center gap-2">
-            <TimerIcon className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
+            <Building className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
             <span className="text-sm text-muted-foreground">
-              {data.duration} hours
+              {data.faculty} hours
             </span>
           </div>
-
+          <div className="flex items-center gap-2">
+            <TimerIcon className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
+            <span className="text-sm text-muted-foreground">
+              {data.department} hours
+            </span>
+          </div>
           <div className="flex items-center gap-2">
             <School className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
             <span className="text-sm text-muted-foreground capitalize">

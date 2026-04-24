@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ApiResponse } from "@/lib/types";
-import { courseSchema} from "@/lib/zodSchema";
+import { courseSchema } from "@/lib/zodSchema";
 import { headers } from "next/headers";
 import { z } from "zod";
 
@@ -35,11 +35,11 @@ export async function CreateCourse(
       };
     }
 
-await prisma.course.create({
+    await prisma.course.create({
       data: {
         ...validation.data,
-        userId: session.user.id
-      }
+        userId: session.user.id,
+      },
     });
     return {
       status: "success",

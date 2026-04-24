@@ -14,7 +14,7 @@ export default async function CoursesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Your Courses</h1>
           <p className="text-muted-foreground text-sm">
-            Manage and monitor all your created courses
+            Manage and monitor your created courses
           </p>
         </div>
 

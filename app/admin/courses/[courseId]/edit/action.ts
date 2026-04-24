@@ -6,6 +6,8 @@ import { courseSchema } from "@/lib/zodSchema";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
+
 export async function EditCourse(
   data: CourseSchemaType,
   courseId: string,
@@ -48,6 +50,80 @@ export async function EditCourse(
     return {
       status: "error",
       message: "Failed to Edit Course",
+    };
+  }
+}
+
+export async function reOrderLessons(
+  chapterId: string,
+  lessons: { id: string; position: number }[],
+  courseId: string,
+): Promise<ApiResponse> {
+  try {
+    if (!lessons || lessons.length === 0) {
+      return {
+        status: "error",
+        message: "No lessons Provided for reordering",
+      };
+    }
+
+    const updates = lessons.map((lessons) =>
+      prisma.lecture.update({
+        where: {
+          id: lessons.id,
+          chapterId: chapterId,
+        },
+        data: {
+          position: lessons.position,
+        },
+      }),
+    );
+    await prisma.$transaction(updates);
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+    return {
+      status: "success",
+      message: "Lessons Successfully Reordered",
+    };
+  } catch {
+    return {
+      status: "error",
+      message: " Failed to reorder Lessons",
+    };
+  }
+}
+
+export async function reOrderChapters(
+  courseId: string,
+  chapters: { id: string; position: number }[],
+): Promise<ApiResponse> {
+  try {
+    if (!chapters || chapters.length === 0) {
+      return {
+        status: "error",
+        message: "No lessons Provided for reordering",
+      };
+    }
+    const updates = chapters.map((chapter) =>
+      prisma.chapter.update({
+        where: {
+          id: chapter.id,
+          courseId: courseId,
+        },
+        data: {
+          position: chapter.position,
+        },
+      }),
+    );
+    await prisma.$transaction(updates);
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+    return {
+      status: "success",
+      message: "Chapters Successfully Reordered",
+    };
+  } catch {
+    return {
+      status: "error",
+      message: " Failed to reorder Lessons",
     };
   }
 }

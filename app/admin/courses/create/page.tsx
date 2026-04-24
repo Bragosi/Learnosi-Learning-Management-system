@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  courseCategory,
   courseLevel,
   courseSchema,
   courseStatus,
@@ -40,11 +39,12 @@ import {
 } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { tryCatch } from "@/hooks/try-catch";
 import { CreateCourse } from "./action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Faculty, facultyDepartments } from "@/lib/facultyDepartments";
 
 export default function CreateCoursePage() {
   const router = useRouter();
@@ -54,16 +54,15 @@ export default function CreateCoursePage() {
     resolver: zodResolver(courseSchema),
     mode: "onChange",
     defaultValues: {
-      title: "",
+      courseCode: "",
       description: "",
       fileKey: "",
-      price: 0,
-      duration: 0,
       level: "LEVEL_100",
-      category: "Computing",
-      smallDescription: "",
+      faculty: "School of Computing",
+      courseTitle: "",
       slug: "",
       status: "DRAFT",
+      department: "",
     },
   });
 
@@ -86,7 +85,16 @@ export default function CreateCoursePage() {
       }
     });
   }
+  const selectedFaculty = form.watch("faculty");
 
+  useEffect(() => {
+    form.setValue("department", "", {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [selectedFaculty]);
+  const faculties = Object.keys(facultyDepartments) as Faculty[];
+  const departments = facultyDepartments[selectedFaculty] || [];
   return (
     <>
       <div className="flex items-center gap-4">
@@ -106,21 +114,45 @@ export default function CreateCoursePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/** Course Code */}
           <Form {...form}>
             <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
-                name="title"
+                name="courseCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Course Code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Title" {...field} />
+                      <Input placeholder="Input Course Code" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/** Course Title */}
+              <FormField
+                control={form.control}
+                name="courseTitle"
+                render={({ field }) => (
+                  <div className="w-full">
+                    <FormItem>
+                      <FormLabel>Course Title</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="e.g Software Engineering"
+                          className="min-h-30"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
+                )}
+              />
+
+              {/** Generate Slug */}
               <div className="flex gap-4 items-end">
                 <FormField
                   control={form.control}
@@ -141,7 +173,7 @@ export default function CreateCoursePage() {
                   type="button"
                   className="w-fit"
                   onClick={() => {
-                    const titleValue = form.getValues("title");
+                    const titleValue = form.getValues("courseTitle");
                     // Good practice: strict mode handles special characters properly
                     const slug = slugify(titleValue, {
                       lower: true,
@@ -153,25 +185,8 @@ export default function CreateCoursePage() {
                   Generate Slug <SparkleIcon className="ml-1" size={16} />
                 </Button>
               </div>
-              <FormField
-                control={form.control}
-                name="smallDescription"
-                render={({ field }) => (
-                  <div className="w-full">
-                    <FormItem>
-                      <FormLabel>Small Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Small Description"
-                          className="min-h-30"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </div>
-                )}
-              />
+
+              {/** Description */}
               <FormField
                 control={form.control}
                 name="description"
@@ -208,28 +223,61 @@ export default function CreateCoursePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="category"
+                  name="faculty"
                   render={({ field }) => (
                     <div className="w-full">
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Faculty</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Category" />
+                              <SelectValue placeholder="Select Faculty" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {courseCategory.map((category) => (
-                              <SelectItem key={category} value={category}>
-                                {category}
+                            {faculties.map((faculty) => (
+                              <SelectItem key={faculty} value={faculty}>
+                                {faculty}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    </div>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="department"
+                  render={({ field }) => (
+                    <div className="w-full">
+                      <FormItem>
+                        <FormLabel>Department</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          disabled={!selectedFaculty}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Department" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {departments.map((dept) => (
+                              <SelectItem key={dept} value={dept}>
+                                {dept}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -266,74 +314,34 @@ export default function CreateCoursePage() {
                 />
                 <FormField
                   control={form.control}
-                  name="duration"
+                  name="status"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Duration (hours)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Duration"
-                          value={field.value}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price($)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Price"
-                          value={field.value}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                    <div className="w-full">
+                      <FormItem>
+                        <FormLabel>Status</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {courseStatus.map((status) => (
+                              <SelectItem key={status} value={status}>
+                                {status}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    </div>
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <div className="w-full">
-                    <FormItem>
-                      <FormLabel>Status</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {courseStatus.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {status}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  </div>
-                )}
-              />
 
               {/* FIX: Removed <p> from inside the button for valid HTML */}
               <Button type="submit" disabled={isPending}>

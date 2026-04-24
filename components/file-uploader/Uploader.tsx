@@ -27,11 +27,13 @@ interface UploaderState {
 
 interface iAppProps {
   value?: string;
-  onChange? : (value : string) => void
+  onChange?: (value: string) => void;
 }
 
-export function Uploader({onChange, value} : iAppProps) {
-  const fileUrl = useConstructUrl(value || "")
+export function Uploader({ onChange, value }: iAppProps) {
+
+  const fileUrl = useConstructUrl(value || "");
+  
   const [fileState, setFileState] = useState<UploaderState>({
     error: false,
     file: null,
@@ -40,8 +42,8 @@ export function Uploader({onChange, value} : iAppProps) {
     progress: 0,
     isDeleting: false,
     fileType: "image",
-    key : value,
-    objectUrl : fileUrl
+    key: value,
+    objectUrl: value ? fileUrl : undefined,
   });
 
   async function uploadFile(file: File) {
@@ -146,6 +148,10 @@ export function Uploader({onChange, value} : iAppProps) {
 
   async function handleRemoveFile() {
     if (fileState.isDeleting || !fileState.objectUrl) return;
+    if (!fileState.key) {
+      toast.error("Missing file key. Cannot delete.");
+      return;
+    }
     try {
       setFileState((prev) => ({
         ...prev,
@@ -174,7 +180,7 @@ export function Uploader({onChange, value} : iAppProps) {
         URL.revokeObjectURL(fileState.objectUrl);
       }
 
-      onChange?.("")
+      onChange?.("");
 
       setFileState(() => ({
         file: null,
@@ -257,7 +263,7 @@ export function Uploader({onChange, value} : iAppProps) {
     multiple: false,
     maxSize: 5 * 1024 * 1024,
     onDropRejected: rejectedFiles,
-    disabled : fileState.uploading || !!fileState.objectUrl
+    disabled: fileState.uploading || !!fileState.objectUrl,
   });
 
   return (

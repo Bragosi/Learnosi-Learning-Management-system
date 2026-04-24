@@ -1,49 +1,51 @@
+import { Faculty } from "@/lib/facultyDepartments";
 import { prisma } from "@/lib/prisma";
+import { CourseLevel, CourseStatus } from "@prisma/client";
 import { notFound } from "next/navigation";
 import "server-only";
-
 export async function AdminGetSingleCourse(id: string) {
   const data = await prisma.course.findUnique({
-    where: {
-      id: id,
-    },
+    where: { id },
     select: {
       id: true,
-      title: true,
+      courseTitle: true,
+      courseCode: true,
       description: true,
       fileKey: true,
-      price: true,
-      duration: true,
       level: true,
       status: true,
       slug: true,
-      smallDescription: true,
-      category: true,
-      chapter:{
-        select:{
-          id:true,
-          title:true,
+      faculty: true,
+      department: true,
+      chapters: {
+        select: {
+          id: true,
+          title: true,
           position: true,
-          lessons:{
-            select:{
+          lectures: {
+            select: {
               id: true,
-              title:true,
-              description:true,
-              thumbnailKey : true,
-              position:true,
-              videoKey:true
-            }
-          }
-
-        }
-      }
+              title: true,
+              description: true,
+              thumbnailKey: true,
+              position: true,
+              videoKey: true,
+            },
+          },
+        },
+      },
     },
   });
-
   if (!data) {
-    return notFound();
+    notFound();
   }
-  return data;
+   return {
+    ...data,
+    faculty: data.faculty as Faculty,
+    level: data.level as CourseLevel,
+    status: data.status as CourseStatus,
+  };
 }
-
-export type AdminGetSingleCourseType = Awaited<ReturnType<typeof AdminGetSingleCourse>>;
+export type AdminGetSingleCourseType = Awaited<
+  ReturnType<typeof AdminGetSingleCourse>
+>;
