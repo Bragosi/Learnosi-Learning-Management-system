@@ -22,7 +22,7 @@ export default async function EditRoute({ params }: { params: Params }) {
         <span className="text-primary underline">{data.courseTitle}</span>
       </h1>
 
-      <Tabs defaultValue="basic-info" className="w-full">
+      <Tabs defaultValue="course-structure" className="w-full">
         <TabsList className="grid grid-cols-2 w-full">
           <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
           <TabsTrigger value="course-structure">Course Structure</TabsTrigger>
@@ -50,7 +50,7 @@ export default async function EditRoute({ params }: { params: Params }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CourseStructure data={data} />
+              <CourseStructure key={JSON.stringify(data.chapters)} data={data} />
             </CardContent>
           </Card>
         </TabsContent>

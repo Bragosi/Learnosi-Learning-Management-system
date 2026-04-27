@@ -38,6 +38,25 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import { reOrderChapters, reOrderLessons } from "../action";
+import { NewChapterModal } from "./NewChapterModal";
+import { NewLectureModal } from "./NewLectureModal";
+import { DeleteLecture } from "./DeleteLecture";
+import { DeleteChapter } from "./DeleteChapter";
+
+// Define strict types for our internal state to remove the "any" red lines
+interface LectureState {
+  id: string;
+  title: string;
+  order: number;
+}
+
+interface ChapterState {
+  id: string;
+  title: string;
+  order: number;
+  isOpen: boolean;
+  lectures: LectureState[];
+}
 
 interface iAppProps {
   data: AdminGetSingleCourseType;
@@ -54,8 +73,9 @@ interface sortableItemProps {
 }
 
 export default function CourseStructure({ data }: iAppProps) {
-  // Mapping the new Prisma structure (chapters -> lectures) to local state
-  const initialItems =
+  // We initialize state directly from props.
+  // Because of the 'key' in the parent, this resets automatically when data changes.
+  const [items, setItems] = useState<ChapterState[]>(() =>
     data.chapters.map((chapter) => ({
       id: chapter.id,
       title: chapter.title,
@@ -66,9 +86,8 @@ export default function CourseStructure({ data }: iAppProps) {
         title: lecture.title,
         order: lecture.position,
       })),
-    })) || [];
-
-  const [items, setItems] = useState(initialItems);
+    })),
+  );
 
   function SortableItem({ children, id, className, data }: sortableItemProps) {
     const {
@@ -98,8 +117,8 @@ export default function CourseStructure({ data }: iAppProps) {
   }
 
   function toggleChapter(chapterId: string) {
-    setItems(
-      items.map((chapter) =>
+    setItems((prev) =>
+      prev.map((chapter) =>
         chapter.id === chapterId
           ? { ...chapter, isOpen: !chapter.isOpen }
           : chapter,
@@ -121,18 +140,11 @@ export default function CourseStructure({ data }: iAppProps) {
     const activeId = active.id as string;
     const overId = over.id as string;
     const activeType = active.data.current?.type as "chapter" | "lecture";
-    const overType = over.data.current?.type as "chapter" | "lecture";
     const previousItems = [...items];
 
-    // --- CHAPTER REORDERING ---
     if (activeType === "chapter") {
-      const targetChapterId =
-        overType === "chapter" ? overId : over.data.current?.chapterId;
-
-      if (!targetChapterId) return;
-
       const oldIndex = items.findIndex((item) => item.id === activeId);
-      const newIndex = items.findIndex((item) => item.id === targetChapterId);
+      const newIndex = items.findIndex((item) => item.id === overId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const reOrderedLocalChapter = arrayMove(items, oldIndex, newIndex);
@@ -151,19 +163,15 @@ export default function CourseStructure({ data }: iAppProps) {
         toast.promise(reOrderChapters(data.id, payload), {
           loading: "Updating chapter order...",
           success: "Chapters reordered!",
-          error: (err) => {
+          error: (err: { message?: string }) => {
             setItems(previousItems);
             return err?.message || "Failed to reorder chapters";
           },
         });
       }
-    }
-
-    // --- LECTURE REORDERING ---
-    else if (activeType === "lecture") {
+    } else if (activeType === "lecture") {
       const activeChapterId = active.data.current?.chapterId;
-      const targetChapterId =
-        overType === "lecture" ? over.data.current?.chapterId : overId;
+      const targetChapterId = over.data.current?.chapterId;
 
       if (activeChapterId && activeChapterId === targetChapterId) {
         const chapterIndex = items.findIndex((c) => c.id === activeChapterId);
@@ -197,7 +205,7 @@ export default function CourseStructure({ data }: iAppProps) {
           toast.promise(reOrderLessons(activeChapterId, payload, data.id), {
             loading: "Saving lecture order...",
             success: "Lectures successfully reordered",
-            error: (err) => {
+            error: (err: { message?: string }) => {
               setItems(previousItems);
               return err?.message || "Failed to reorder lectures";
             },
@@ -218,6 +226,7 @@ export default function CourseStructure({ data }: iAppProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b border-border">
           <CardTitle>Course Structure</CardTitle>
+          <NewChapterModal courseId={data.id} />
         </CardHeader>
 
         <CardContent className="pt-6">
@@ -256,13 +265,10 @@ export default function CourseStructure({ data }: iAppProps) {
                           </CollapsibleTrigger>
                           <p className="font-medium pl-2">{item.title}</p>
                         </div>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
+                        <DeleteChapter
+                          chapterId={item.id}
+                          courseId={data.id}
+                        />
                       </div>
 
                       <CollapsibleContent>
@@ -296,13 +302,11 @@ export default function CourseStructure({ data }: iAppProps) {
                                         {lecture.title}
                                       </Link>
                                     </div>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                    >
-                                      <Trash2 className="size-4" />
-                                    </Button>
+                                    <DeleteLecture
+                                      lectureId={lecture.id}
+                                      chapterId={item.id}
+                                      courseId={data.id}
+                                    />
                                   </div>
                                 )}
                               </SortableItem>
@@ -314,7 +318,10 @@ export default function CourseStructure({ data }: iAppProps) {
                               className="w-full text-xs h-8"
                               variant="outline"
                             >
-                              + Add Lecture
+                              <NewLectureModal
+                                courseId={data.id}
+                                chapterId={item.id}
+                              />
                             </Button>
                           </div>
                         </div>

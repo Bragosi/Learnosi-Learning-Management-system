@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  facultyDepartments,
-  type Faculty,
-} from "./facultyDepartments";
+import { facultyDepartments, type Faculty } from "./facultyDepartments";
 export const courseLevel = [
   "LEVEL_100",
   "LEVEL_200",
@@ -63,3 +60,28 @@ export const courseSchema = z
       });
     }
   });
+
+export const chapterSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 character long" }),
+  courseId: z.string().uuid({ message: "Invalid course Id" }),
+});
+
+export const LectureSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 character long" }),
+  courseId: z.string().uuid({ message: "Invalid Lecture Id" }),
+  chapterId: z.string().uuid({ message: "Invalid Lecture Id" }),
+  description: z
+    .string()
+    .min(3, { message: "description must be at least 3 character long" }).optional(),
+    thumbnailKey : z.string().optional(),
+    videoKey: z.string().optional(),
+    pdfKey : z.string().optional()
+
+});
+
+export type ChapterSchemaType = z.infer<typeof chapterSchema>;
+export type LectureSchemaType = z.infer<typeof LectureSchema>;
