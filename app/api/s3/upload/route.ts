@@ -10,7 +10,7 @@ export const fileUploadSchema = z.object({
   fileName: z.string().min(1, { message: "File name is Required" }),
   contentType: z.string().min(1, { message: "Content type is required" }),
   size: z.number().min(1, { message: "size is required" }),
-  isImage: z.boolean(),
+  fileType: z.enum(["image", "video", "pdf"]),
 });
 
 export async function POST(request: Request) {
@@ -25,14 +25,20 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const { fileName, contentType, size } = validation.data;
+    const { fileName, contentType, fileType } = validation.data;
 
-    const uniquekey = `${uuidv4()}-${fileName}`;
+    const folder =
+      fileType === "image"
+        ? "images"
+        : fileType === "video"
+          ? "videos"
+          : "pdfs";
+
+    const uniquekey = `${folder}/${uuidv4()}-${fileName}`;
 
     const command = new PutObjectCommand({
       Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
       ContentType: contentType,
-      ContentLength: size,
       Key: uniquekey,
     });
     const preSignedUrl = await getSignedUrl(S3, command, {

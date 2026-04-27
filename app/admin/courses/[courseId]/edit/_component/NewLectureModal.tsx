@@ -84,7 +84,7 @@ export function NewLectureModal({
         <DialogHeader>
           <DialogTitle>Create new Lecture</DialogTitle>
           <DialogDescription>
-            Give your Lecture a clear and meaningful name.
+            Arrange your Lectures in the correct order.
           </DialogDescription>
         </DialogHeader>
 
@@ -96,7 +96,7 @@ export function NewLectureModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Lecture name</FormLabel>
-                  <Input placeholder="e.g. " {...field} />
+                  <Input placeholder="e.g. Lecture 1 " {...field} />
                   <FormMessage />
                 </FormItem>
               )}

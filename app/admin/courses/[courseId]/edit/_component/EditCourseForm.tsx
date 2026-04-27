@@ -211,6 +211,7 @@ export function EditCourseForm({ value }: iAppProps) {
                       <FormLabel>Thumbnail Image</FormLabel>
                       <FormControl>
                         <Uploader
+                          fileTypeAccepted="image"
                           onChange={field.onChange}
                           value={field.value}
                         />
@@ -352,7 +353,7 @@ export function EditCourseForm({ value }: iAppProps) {
                   </span>
                 ) : (
                   <span className="flex items-center">
-                Edit Course <PlusIcon className="ml-2 size-4" />
+                    Edit Course <PlusIcon className="ml-2 size-4" />
                   </span>
                 )}
               </Button>

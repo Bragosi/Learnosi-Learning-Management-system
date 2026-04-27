@@ -54,7 +54,7 @@ export function DeleteChapter({
           <Trash2 className="size-4" />
         </Button>
       </AlertDialogTrigger>
-
+  
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
