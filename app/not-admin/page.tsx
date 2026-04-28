@@ -4,8 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardContent,
-  CardFooter,
+  CardContent
 } from "@/components/ui/card";
 import { ArrowLeft, ShieldX } from "lucide-react";
 import Link from "next/link";

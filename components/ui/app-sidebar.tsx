@@ -33,6 +33,7 @@ import Image from "next/image";
 import Logo from "@/public/Learnosi Logo.png";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { buttonVariants } from "./button";
 
 const data = {
   navMain: [
@@ -160,7 +161,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <Link href="/">
+              <Link className={buttonVariants({variant : 'ghost'})} href="/">
                 <Image src={Logo} width={50} height={50} alt="Learnosi" />
                 <span className="text-base font-semibold">Learnosi</span>
               </Link>

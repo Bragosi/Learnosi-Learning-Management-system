@@ -1,7 +1,21 @@
 import { Faculty } from "@/lib/facultyDepartments";
 import { prisma } from "@/lib/prisma";
 import { CourseLevel, CourseStatus } from "@prisma/client";
-export async function adminGetCourses() {
+
+export type AdminCourseType = {
+  id: string;
+  courseTitle: string;
+  courseCode: string;
+  level: CourseLevel;
+  status: CourseStatus;
+  fileKey: string;
+  slug: string;
+  description: string;
+  faculty: Faculty;
+  department: string;
+};
+
+export async function adminGetCourses(): Promise<AdminCourseType[]> {
   const data = await prisma.course.findMany({
     orderBy: {
       createdAt: "desc",
@@ -19,18 +33,6 @@ export async function adminGetCourses() {
       department: true,
     },
   });
-  return data;
-}
 
-export type AdminCourseType = {
-  id: string;
-  courseTitle: string;
-  courseCode: string;
-  level: CourseLevel;
-  status: CourseStatus;
-  fileKey: string;
-  slug: string;
-  description: string;
-  faculty: Faculty;
-  department: string;
-};
+  return data as AdminCourseType[];
+}

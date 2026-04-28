@@ -7,19 +7,46 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String?
-  email         String   @unique
-  emailVerified Boolean  @default(false)
+  email         String     @unique
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  matircNumber  String?
+  status        UserStatus @default(STUDENT)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  profile Profile?
 
   sessions Session[]
   accounts Account[]
-  courses  Course[]
+  courses  Course[] // courses created (for lecturer/admin)
 
   @@map("user")
+}
+
+enum UserStatus {
+  ADMIN
+  STUDENT
+  LECTURER
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  bio        String?
+  phone      String?
+  faculty    String
+  department String?
+  level      CourseLevel?
+  avatarKey  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Session {

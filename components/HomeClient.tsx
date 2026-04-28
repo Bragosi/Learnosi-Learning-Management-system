@@ -52,7 +52,7 @@ export default function HomeClient({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link href="/admin/courses" className={buttonVariants({ size: "lg" })}>
+            <Link href="/courses" className={buttonVariants({ size: "lg" })}>
               Explore Courses
             </Link>
             {session ? (

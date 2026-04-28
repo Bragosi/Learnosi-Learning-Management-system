@@ -9,9 +9,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditCourseForm } from "./_component/EditCourseForm";
 import CourseStructure from "./_component/CourseStructure";
+import { requireRole } from "@/lib/requireRole";
+import { UserStatus } from "@prisma/client";
 type Params = Promise<{ courseId: string }>;
 
 export default async function EditRoute({ params }: { params: Params }) {
+  await requireRole([UserStatus.LECTURER, UserStatus.ADMIN]);
   const { courseId } = await params;
 
   const data = await AdminGetSingleCourse(courseId);
@@ -50,7 +53,10 @@ export default async function EditRoute({ params }: { params: Params }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CourseStructure key={JSON.stringify(data.chapters)} data={data} />
+              <CourseStructure
+                key={JSON.stringify(data.chapters)}
+                data={data}
+              />
             </CardContent>
           </Card>
         </TabsContent>

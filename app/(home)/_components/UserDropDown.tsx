@@ -86,7 +86,7 @@ export function UserDropDown({ session, onLogout, loading }: Props) {
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
-            <Link href="/admin/courses" className="flex items-center gap-2 w-full">
+            <Link href="/courses" className="flex items-center gap-2 w-full">
               <BookOpen size={16} className="opacity-60" />
               Courses
             </Link>

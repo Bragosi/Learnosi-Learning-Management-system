@@ -12,11 +12,13 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function EditCourse(
   data: CourseSchemaType,
   courseId: string,
 ): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     const result = courseSchema.safeParse(data);
     if (!result.success) {
@@ -64,6 +66,7 @@ export async function reOrderLessons(
   lessons: { id: string; position: number }[],
   courseId: string,
 ): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     if (!lessons || lessons.length === 0) {
       return {
@@ -101,6 +104,7 @@ export async function reOrderChapters(
   courseId: string,
   chapters: { id: string; position: number }[],
 ): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     if (!chapters || chapters.length === 0) {
       return {
@@ -135,6 +139,7 @@ export async function reOrderChapters(
 export async function createChapter(
   values: ChapterSchemaType,
 ): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     const result = chapterSchema.safeParse(values);
 
@@ -181,6 +186,7 @@ export async function createChapter(
 export async function createLecture(
   values: ChapterSchemaType,
 ): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     const result = LectureSchema.safeParse(values);
 
@@ -236,6 +242,7 @@ export async function deleteLecture({
   courseId: string;
   lectureId: string;
 }): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     const chapterWithLecture = await prisma.chapter.findUnique({
       where: {
@@ -315,6 +322,7 @@ export async function deleteChapter({
   chapterId: string;
   courseId: string;
 }): Promise<ApiResponse> {
+  await requireAdmin();
   try {
     const courseWithChapters = await prisma.course.findUnique({
       where: {

@@ -264,10 +264,7 @@ export default function CourseStructure({ data }: iAppProps) {
                           </CollapsibleTrigger>
                           <p className="font-medium pl-2">{item.title}</p>
                         </div>
-                        <DeleteChapter
-                          chapterId={item.id}
-                          courseId={data.id}
-                        />
+                        <DeleteChapter chapterId={item.id} courseId={data.id} />
                       </div>
 
                       <CollapsibleContent>
