@@ -16,7 +16,7 @@ export default function PublicCoursesroute() {
           learning goals
         </p>
       </div>
-      <Suspense fallback={<LoadingSkeletonLayout />}>
+      <Suspense fallback={<LoadingSkeletonLayout/>} >
         <RenderPublicCourses />
       </Suspense>
     </div>

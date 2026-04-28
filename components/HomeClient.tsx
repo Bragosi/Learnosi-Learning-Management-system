@@ -52,7 +52,7 @@ export default function HomeClient({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link href="/courses" className={buttonVariants({ size: "lg" })}>
+            <Link href="/courses"className={buttonVariants({ size: "lg" })}>
               Explore Courses
             </Link>
             {session ? (
@@ -69,6 +69,13 @@ export default function HomeClient({
               </Link>
             )}
           </div>
+          <div className="absolute inset-0 pointer-events-none bg-linear-to-br from-background via-muted/5 to-primary/5">
+  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] opacity-20"></div>
+</div>
+
+<div className="absolute top-10 left-1/4 w-64 h-64 md:w-72 md:h-72 pointer-events-none bg-linear-to-r from-primary/20 to-primary/10 rounded-full blur-3xl" />
+
+<div className="absolute bottom-10 right-1/4 w-80 h-80 md:w-96 md:h-96 pointer-events-none bg-linear-to-r from-primary/15 to-primary/5 rounded-full blur-3xl" />
         </div>
       </section>
 

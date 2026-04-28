@@ -2,8 +2,8 @@ import {
   BookOpen,
   ChevronDownIcon,
   Home,
-  LayoutDashboardIcon,
   LogOutIcon,
+  User2,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -93,9 +93,9 @@ export function UserDropDown({ session, onLogout, loading }: Props) {
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
-            <Link href="/admin/dashboard" className="flex items-center gap-2 w-full">
-              <LayoutDashboardIcon size={16} className="opacity-60" />
-              Dashboard
+            <Link href="/profile" className="flex items-center gap-2 w-full">
+              <User2 size={16} className="opacity-60" />
+              Profile
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
