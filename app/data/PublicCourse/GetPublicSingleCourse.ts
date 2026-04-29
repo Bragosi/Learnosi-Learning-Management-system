@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import "server-only"
 
 export async function GetPublicSingleCourse(slug: string) {
   const course = await prisma.course.findUnique({

@@ -11,9 +11,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConstructUrl } from "@/hooks/useContructUrl";
 import { levelLabels } from "@/lib/zodSchema";
+import { IconChartBar } from "@tabler/icons-react";
 import {
   ArrowRight,
-  ArrowsUpFromLine,
   BookOpen,
   Eye,
   MoreVerticalIcon,
@@ -100,7 +100,7 @@ export function AdminCoursecard({ data }: iAppProps) {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <ArrowsUpFromLine className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
+            <IconChartBar className="size-8 p-1.5 rounded-md text-primary bg-primary/10" />
             <span className="text-sm text-muted-foreground capitalize">
               {levelLabels[data.level]}
             </span>

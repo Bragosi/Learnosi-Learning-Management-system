@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-
+import "server-only"
 
 export async function GetAllCourses(){
     const data = await prisma.course.findMany({

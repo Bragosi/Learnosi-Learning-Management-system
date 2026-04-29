@@ -1,3 +1,4 @@
+import "server-only"
 import { Faculty } from "@/lib/facultyDepartments";
 import { prisma } from "@/lib/prisma";
 import { CourseLevel, CourseStatus } from "@prisma/client";

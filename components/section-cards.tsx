@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -8,104 +8,152 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { TrendingUpIcon, TrendingDownIcon } from "lucide-react"
+} from "@/components/ui/card";
+import {
+  GraduationCap,
+  Shield,
+  UserCheck,
+  BookOpen,
+  Users,
+  Tv2Icon,
+} from "lucide-react";
 
-export function SectionCards() {
+export function SectionCards({
+  stats,
+}: {
+  stats: {
+    totalUsers: number;
+    totalStudents: number;
+    totalLecturers: number;
+    totalAdmins: number;
+    totalCourses: number;
+    totalLectures: number;
+  };
+}) {
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+    <div
+      className="
+  grid 
+  grid-cols-1 
+  sm:grid-cols-2 
+  lg:grid-cols-3 
+  2xl:grid-cols-6 
+  gap-4 
+  md:gap-6
+"
+    >
+      {/* Total Users */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>Total Users</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+            {stats.totalUsers.toLocaleString()}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +12.5%
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Users className="size-4" />
+              All Accounts
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
+        <CardFooter className="text-sm text-muted-foreground">
+          Total number of registered users on the platform
         </CardFooter>
       </Card>
+
+      {/* Students */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Students</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            {stats.totalStudents.toLocaleString()}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingDownIcon
-              />
-              -20%
+            <Badge variant="outline" className="flex items-center gap-1">
+              <GraduationCap className="size-4" />
+              Learners
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period{" "}
-            <TrendingDownIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
+        <CardFooter className="text-sm h-full w-full text-muted-foreground">
+          Users enrolled as students across all courses
         </CardFooter>
       </Card>
+
+      {/* Lecturers */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Lecturers</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            {stats.totalLecturers.toLocaleString()}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +12.5%
+            <Badge variant="outline" className="flex items-center gap-1">
+              <UserCheck className="size-4" />
+              Instructors
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+        <CardFooter className="text-sm h-full w-full text-muted-foreground">
+          Verified lecturers managing and teaching courses
         </CardFooter>
       </Card>
+
+      {/* Admins */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Admins</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            {stats.totalAdmins.toLocaleString()}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +4.5%
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Shield className="size-4" />
+              System Control
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+        <CardFooter className="text-sm h-full w-full text-muted-foreground">
+          Administrators with full platform access
+        </CardFooter>
+      </Card>
+      {/** Total courses */}
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Total Courses</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {stats.totalCourses.toLocaleString()}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="flex items-center gap-1">
+              <BookOpen className="size-4" />
+              All Courses
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="text-sm h-full w-full text-muted-foreground">
+          Total number of Published courses on the platform
+        </CardFooter>
+      </Card>
+
+      {/** Total Lectures */}
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Total Lectures</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {stats.totalLectures.toLocaleString()}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Tv2Icon className="size-4" />
+              All Lectures
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="text-sm h-full w-full text-muted-foreground">
+          Total number of learning content available
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

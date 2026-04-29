@@ -16,6 +16,9 @@ import {
   Collapsible,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
+import { RequireUser } from "@/app/data/user/requireUser";
+import { prisma } from "@/lib/prisma";
+import EnrollButton from "./_component/EnrollButton";
 import { Button } from "@/components/ui/button";
 
 type Params = Promise<{ slug: string }>;
@@ -34,8 +37,21 @@ export default async function SlugPage({ params }: { params: Params }) {
 
   const totalLectures = course.chapters.reduce(
     (total, chapter) => total + chapter.lectures.length,
-    0
+    0,
   );
+
+  const user = await RequireUser();
+
+  const enrollment = await prisma.enrollment.findUnique({
+    where: {
+      userId_courseId: {
+        userId: user.id,
+        courseId: course.id,
+      },
+    },
+  });
+
+  const isEnrolled = !!enrollment;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -205,8 +221,17 @@ export default async function SlugPage({ params }: { params: Params }) {
                     </div>
                   ))}
                 </div>
+                {isEnrolled ? (
+                  <Button variant="outline" disabled className="w-full items-center">
+                    Registered <CheckIcon className="size-4"/>
+                  </Button>
+                ) :(
+                  <div>
 
-                <Button className="w-full">Register Now</Button>
+                  </div>
+                )
+              }
+                <EnrollButton courseId={course.id} isEnrolled={isEnrolled} />
               </CardContent>
             </Card>
           </div>

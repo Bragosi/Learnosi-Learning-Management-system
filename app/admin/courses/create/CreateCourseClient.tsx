@@ -68,7 +68,6 @@ export default function CreateCoursePage() {
 
   function onSubmit(data: z.infer<typeof courseSchema>) {
     startTransition(async () => {
-      // FIX: pass 'data' instead of 'values'
       const { data: result, error } = await tryCatch(CreateCourse(data));
 
       if (error) {

@@ -21,7 +21,8 @@ model User {
 
   sessions Session[]
   accounts Account[]
-  courses  Course[] // courses created (for lecturer/admin)
+  courses  Course[] 
+  enrollment Enrollment[]
 
   @@map("user")
 }
@@ -123,6 +124,8 @@ model Course {
 
   chapters Chapter[]
 
+  enrollment Enrollment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -181,4 +184,26 @@ model Lecture {
 
   @@unique([chapterId, position])
   @@index([chapterId])
+}
+
+model Enrollment {  
+  id String @id @default(uuid())
+
+  status EnrollmentStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@unique([userId, courseId])
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE 
+  CANCELLED
 }
