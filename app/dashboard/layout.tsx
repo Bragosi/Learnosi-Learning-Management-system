@@ -1,14 +1,11 @@
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/app-sidebar";
+import { ReactNode } from "react";
+import { DashboardAppSidebar } from "./_components/DashboardAppSideBar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <SidebarProvider
+export default function DashboardLayout({children} : {children : ReactNode}){
+    return (
+        <SidebarProvider
       style={
         {
           "--sidebar-width": "calc(var(--spacing) * 72)",
@@ -16,7 +13,7 @@ export default function AdminLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <DashboardAppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
@@ -28,5 +25,5 @@ export default function AdminLayout({
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+    )
 }

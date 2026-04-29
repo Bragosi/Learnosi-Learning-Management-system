@@ -1,5 +1,5 @@
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { SectionCards } from "@/components/section-cards";
+import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactive";
+import { SectionCards } from "@/components/sidebar/section-cards";
 import { requireRole } from "@/lib/requireRole";
 import { UserStatus } from "@prisma/client";
 import { TotalAppUsers } from "../data/admin/AdminGetAppInfo";

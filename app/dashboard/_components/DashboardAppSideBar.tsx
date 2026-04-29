@@ -14,10 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
-  ListIcon,
-  ChartBarIcon,
-  FolderIcon,
-  UsersIcon,
   CameraIcon,
   FileTextIcon,
   Settings2Icon,
@@ -32,35 +28,15 @@ import Image from "next/image";
 import Logo from "@/public/Learnosi Logo.png";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { buttonVariants } from "./button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/admin",
+      url: "/dashboard",
       icon: <LayoutDashboardIcon />,
-    },
-    {
-      title: "Courses",
-      url: "/admin/courses",
-      icon: <ListIcon />,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: <ChartBarIcon />,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
     },
   ],
   navClouds: [
@@ -147,7 +123,7 @@ const data = {
   ],
 };
 
-export async function AppSidebar({
+export async function DashboardAppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const session = await auth.api.getSession({
