@@ -214,6 +214,7 @@ export async function createLecture(
           description: result.data.description,
           videoKey: result.data.videoKey,
           thumbnailKey: result.data.thumbnailKey,
+          pdfKey: result.data.pdfKey,
           chapterId: result.data.chapterId,
           position: (maxPosition?.position ?? 0) + 1,
         },

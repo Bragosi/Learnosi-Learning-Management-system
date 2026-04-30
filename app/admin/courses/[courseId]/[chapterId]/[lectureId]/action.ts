@@ -29,6 +29,7 @@ export async function updateLecture(
         description: result.data.description,
         thumbnailKey: result.data.thumbnailKey,
         videoKey: result.data.videoKey,
+        pdfKey: result.data.pdfKey
       },
     });
 

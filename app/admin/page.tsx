@@ -8,9 +8,11 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { AdminGetRecentCourses } from "../data/admin/AdminGetRecentCourses";
 import { EmptyState } from "@/components/general/EmptyState";
-import { AdminCoursecard, AdminCourseCardSkeleton } from "./courses/_component/AdminCourseCard";
+import {
+  AdminCoursecard,
+  AdminCourseCardSkeleton,
+} from "./courses/_component/AdminCourseCard";
 import { Suspense } from "react";
-
 
 export default async function AdminIndexPage() {
   const enrollmentData = await AdminGetEnrollmentStats();
@@ -30,8 +32,8 @@ export default async function AdminIndexPage() {
             View All Courses
           </Link>
         </div>
-        <Suspense fallback={ <RenderRecentCoursesSkeletonLayout/> } >
-          <RenderRecentCourses/>
+        <Suspense fallback={<RenderRecentCoursesSkeletonLayout />}>
+          <RenderRecentCourses />
         </Suspense>
       </div>
     </>
@@ -53,23 +55,20 @@ async function RenderRecentCourses() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
-      {data.map((course)=>(
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {data.map((course) => (
         <AdminCoursecard key={course.id} data={course} />
       ))}
     </div>
-  )
+  );
 }
 
-
-function RenderRecentCoursesSkeletonLayout(){
+function RenderRecentCoursesSkeletonLayout() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
-    {
-      Array.from({length : 2}).map((_, index)=>(
-        <AdminCourseCardSkeleton key={index}/>
-      ))
-    }
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <AdminCourseCardSkeleton key={index} />
+      ))}
     </div>
-  )
+  );
 }

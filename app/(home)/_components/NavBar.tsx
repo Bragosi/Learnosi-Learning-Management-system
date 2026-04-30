@@ -15,6 +15,7 @@ const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Courses", href: "/courses" },
   { name: "Dashboard", href: "/dashboard" },
+  { name: "Profile", href: "/profile" },
 ];
 
 export default function NavBar({

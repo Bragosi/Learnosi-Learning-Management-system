@@ -1,6 +1,8 @@
 import { EmptyState } from "@/components/general/EmptyState";
 import { GetAllCourses } from "../data/PublicCourse/GetAllCourses";
 import { GetEnrolledCourses } from "../data/user/GetEnrolledCourses";
+import PublicCourseCard from "../(home)/_components/PublicCourseCard";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const [courses, enrolledCourses] = await Promise.all([
@@ -26,7 +28,11 @@ export default async function DashboardPage() {
           href="/courses"
         />
       ) : (
-        <p>The courses you registerd for: </p>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {enrolledCourses.map((course) => (
+            <Link key={course.id} href={`/dashboard/${course.slug}`}>{course.courseTitle}</Link>
+          ))}
+        </div>
       )}
       <section className="mt-10">
         <div className="flex flex-col gap-2">
@@ -39,14 +45,14 @@ export default async function DashboardPage() {
           {availableCourses.length === 0 ? (
             <EmptyState
               title="No courses available"
-              description="You have already registered for all available courses"
-              buttonText="Browse courses"
-              href="/courses"
+              description={"You have registered for all available course"}
+              buttonText={"Back to home page"}
+              href={"/"}
             />
           ) : (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {availableCourses.map((course) => (
-                <div key={course.id}>{course.courseTitle}</div>
+                <PublicCourseCard key={course.id} data={course} />
               ))}
             </div>
           )}

@@ -23,6 +23,7 @@ model User {
   accounts Account[]
   courses  Course[] 
   enrollment Enrollment[]
+  lectureProgress LectureProgress[]
 
   @@map("user")
 }
@@ -179,6 +180,9 @@ model Lecture {
   chapterId String
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
+  lectureProgress LectureProgress[]
+
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -206,4 +210,23 @@ enum EnrollmentStatus {
   PENDING
   ACTIVE 
   CANCELLED
+}
+
+model LectureProgress {
+  id String @id @default(uuid())
+
+  completed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  lectureId String
+  lecture   Lecture @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lectureId], name: "userId_lectureId")
+  @@index([userId])
+  @@index([lectureId])
 }
