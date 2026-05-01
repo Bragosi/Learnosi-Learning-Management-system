@@ -29,6 +29,8 @@ import { useTransition } from "react";
 import { updateLecture } from "../action";
 import { toast } from "sonner";
 import { tryCatch } from "@/hooks/try-catch";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface iAppProps {
   data: AdminLectureType;
@@ -37,6 +39,7 @@ interface iAppProps {
 }
 
 export function LectureForm({ chapterId, data, courseId }: iAppProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const form = useForm<LectureSchemaType>({
     resolver: zodResolver(LectureSchema),
@@ -66,6 +69,7 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
 
       if (result?.status === "success") {
         toast.success(result.message);
+        router.push(`/admin/courses/${courseId}/edit`);
       } else if (result?.status === "error") {
         toast.error(result.message);
       }
@@ -74,7 +78,7 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
   return (
     <div>
       <Link
-        className={buttonVariants({ variant: "outline" })}
+        className={cn(buttonVariants({ variant: "outline" }), "mb-4")}
         href={`/admin/courses/${courseId}/edit`}
       >
         <ArrowLeft className="size-4" />
@@ -100,7 +104,11 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
                     <FormItem>
                       <FormLabel>Lecture Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Chapter xyz" {...field} />
+                        <Input
+                          className="mt-1"
+                          placeholder="Lecture xyz"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -113,7 +121,9 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <RichTextEditor field={field} />
+                        <div className="mt-1">
+                          <RichTextEditor field={field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -126,11 +136,13 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
                     <FormItem>
                       <FormLabel>Thumbnail Image (Optional)</FormLabel>
                       <FormControl>
-                        <Uploader
-                          fileTypeAccepted="image"
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
+                        <div className="mt-1">
+                          <Uploader
+                            fileTypeAccepted="image"
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -144,11 +156,13 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
                     <FormItem>
                       <FormLabel>Video File</FormLabel>
                       <FormControl>
-                        <Uploader
-                          fileTypeAccepted="video"
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
+                        <div className="mt-1">
+                          <Uploader
+                            fileTypeAccepted="video"
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -161,11 +175,13 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
                     <FormItem>
                       <FormLabel>PDF File (Optional)</FormLabel>
                       <FormControl>
-                        <Uploader
-                          fileTypeAccepted="pdf"
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
+                        <div className="mt-1">
+                          <Uploader
+                            fileTypeAccepted="pdf"
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

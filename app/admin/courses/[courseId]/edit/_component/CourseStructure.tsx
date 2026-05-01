@@ -309,16 +309,15 @@ export default function CourseStructure({ data }: iAppProps) {
                             ))}
                           </SortableContext>
 
-                          <div className="mt-2 px-2 pb-2">
-                            <Button
-                              className="w-full text-xs h-8"
-                              variant="outline"
+                          <div className="mt-2 w-full px-2 pb-2">
+                            <div
+                              className="w-full rounded-lg border text-xs h-8"
                             >
                               <NewLectureModal
                                 courseId={data.id}
                                 chapterId={item.id}
                               />
-                            </Button>
+                            </div>
                           </div>
                         </div>
                       </CollapsibleContent>

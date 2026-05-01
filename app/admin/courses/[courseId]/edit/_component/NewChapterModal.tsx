@@ -90,6 +90,7 @@ export function NewChapterModal({ courseId }: { courseId: string }) {
                 <FormItem>
                   <FormLabel>Chapter name</FormLabel>
                   <Input
+                  className="mt-1"
                     placeholder="e.g. Introduction to Software Engineering"
                     {...field}
                   />

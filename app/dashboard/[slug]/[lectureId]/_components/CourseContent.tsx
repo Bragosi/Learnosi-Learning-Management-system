@@ -74,7 +74,6 @@ function VideoPlayer({
 
 export function CourseContent({ data }: iAppProps) {
   const [pending, startTransition] = useTransition();
-
   function onSubmit() {
     startTransition(async () => {
       const { data: result, error } = await tryCatch(
@@ -100,7 +99,7 @@ export function CourseContent({ data }: iAppProps) {
         thumbnailkey={data.thumbnailKey ?? ""}
         videoKey={data.videoKey ?? ""}
       />
-      <div className="py-4 border-b flex gap-4">
+      <div className="py-4 border-b justify-between flex gap-4">
         {data.lectureProgress.length > 0 ? (
           <Button
             disabled
@@ -117,7 +116,7 @@ export function CourseContent({ data }: iAppProps) {
                 <p>Marking...</p>
               </div>
             ) : (
-              <div className="flex items-center"> 
+              <div className="flex items-center">
                 <CheckCircle className="size-4 mr-2 text-green-500" />
                 <p>Mark as complete</p>
               </div>
@@ -134,6 +133,8 @@ export function CourseContent({ data }: iAppProps) {
         {data.description && (
           <RenderDescription json={JSON.parse(data.description)} />
         )}
+      </div>
+      <div>
       </div>
     </div>
   );

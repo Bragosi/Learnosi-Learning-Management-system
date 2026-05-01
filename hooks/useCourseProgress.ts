@@ -1,10 +1,21 @@
 "use client"
-
-import { CourseSideBarDataType } from "@/app/data/PublicCourse/GetCourseSideBarData";
 import { useMemo } from "react";
 
+// 1. Define only the data structure this hook actually needs
+interface CourseProgressData {
+  chapters: {
+    lectures: {
+      id: string;
+      lectureProgress?: { // Notice the '?' just in case it's undefined
+        lectureId: string;
+        completed: boolean;
+      }[];
+    }[];
+  }[];
+}
+
 interface iAppProps {
-  courseData: CourseSideBarDataType["course"];
+  courseData: CourseProgressData;
 }
 
 interface CourseProgressResult {
@@ -24,7 +35,8 @@ export function useCourseProgress({
       chapter.lectures.forEach((lecture) => {
         totalLectures++;
 
-        const isCompleted = lecture.lectureProgress.some(
+        // 2. Add optional chaining (?.) here in case lectureProgress is missing
+        const isCompleted = lecture.lectureProgress?.some(
           (progress) =>
             progress.lectureId === lecture.id && progress.completed
         );

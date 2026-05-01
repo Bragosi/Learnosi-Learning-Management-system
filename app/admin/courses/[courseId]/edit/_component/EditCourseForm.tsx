@@ -124,7 +124,11 @@ export function EditCourseForm({ value }: iAppProps) {
                   <FormItem>
                     <FormLabel>Course Code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Input Course Code" {...field} />
+                      <Input
+                        className="mt-1"
+                        placeholder="Input Course Code"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -142,7 +146,7 @@ export function EditCourseForm({ value }: iAppProps) {
                       <FormControl>
                         <Textarea
                           placeholder="e.g Software Engineering"
-                          className="min-h-30"
+                          className="min-h-20 mt-1"
                           {...field}
                         />
                       </FormControl>
@@ -162,7 +166,11 @@ export function EditCourseForm({ value }: iAppProps) {
                       <FormItem>
                         <FormLabel>Slug</FormLabel>
                         <FormControl>
-                          <Input placeholder="Slug" {...field} />
+                          <Input
+                            className="mt-1"
+                            placeholder="Slug"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -195,7 +203,9 @@ export function EditCourseForm({ value }: iAppProps) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <RichTextEditor field={field} />
+                        <div className="w-full mt-1">
+                          <RichTextEditor field={field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -210,11 +220,13 @@ export function EditCourseForm({ value }: iAppProps) {
                     <FormItem>
                       <FormLabel>Thumbnail Image</FormLabel>
                       <FormControl>
-                        <Uploader
-                          fileTypeAccepted="image"
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
+                        <div className="mt-1 w-full">
+                          <Uploader
+                            fileTypeAccepted="image"
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -229,23 +241,25 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Faculty</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Faculty" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {faculties.map((faculty) => (
-                              <SelectItem key={faculty} value={faculty}>
-                                {faculty}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="mt-1">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Faculty" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {faculties.map((faculty) => (
+                                <SelectItem key={faculty} value={faculty}>
+                                  {faculty}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -259,25 +273,27 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Department</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={!selectedFaculty}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Department" />
-                            </SelectTrigger>
-                          </FormControl>
+                        <div className="mt-1">
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            disabled={!selectedFaculty}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Department" />
+                              </SelectTrigger>
+                            </FormControl>
 
-                          <SelectContent>
-                            {departments.map((dept) => (
-                              <SelectItem key={dept} value={dept}>
-                                {dept}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                            <SelectContent>
+                              {departments.map((dept) => (
+                                <SelectItem key={dept} value={dept}>
+                                  {dept}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
 
                         <FormMessage />
                       </FormItem>
@@ -291,23 +307,25 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Level</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Level" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {courseLevel.map((level) => (
-                              <SelectItem key={level} value={level}>
-                                {levelLabels[level]}{" "}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="mt-1 w-full">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Level" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {courseLevel.map((level) => (
+                                <SelectItem key={level} value={level}>
+                                  {levelLabels[level]}{" "}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -320,23 +338,25 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Status</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Status" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {courseStatus.map((status) => (
-                              <SelectItem key={status} value={status}>
-                                {status}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="w-full mt-1">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {courseStatus.map((status) => (
+                                <SelectItem key={status} value={status}>
+                                  {status}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -344,7 +364,6 @@ export function EditCourseForm({ value }: iAppProps) {
                 />
               </div>
 
-              {/* FIX: Removed <p> from inside the button for valid HTML */}
               <Button type="submit" disabled={isPending}>
                 {isPending ? (
                   <span className="flex items-center">

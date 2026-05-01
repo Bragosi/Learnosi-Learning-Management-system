@@ -96,7 +96,7 @@ export function NewLectureModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Lecture name</FormLabel>
-                  <Input placeholder="e.g. Lecture 1 " {...field} />
+                  <Input className="mt-1" placeholder="e.g. Lecture 1 " {...field} />
                   <FormMessage />
                 </FormItem>
               )}

@@ -22,6 +22,9 @@ import {
   DatabaseIcon,
   FileChartColumnIcon,
   FileIcon,
+  Home,
+  User2,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -33,6 +36,21 @@ import { cn } from "@/lib/utils";
 
 const data = {
   navMain: [
+    {
+      title: "Home",
+      url: "/",
+      icon: <Home />,
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: <User2 />,
+    },
+    {
+      title: "Courses",
+      url: "/courses",
+      icon: <BookOpen />,
+    },
     {
       title: "Dashboard",
       url: "/dashboard",
