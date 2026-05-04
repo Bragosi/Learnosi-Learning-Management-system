@@ -76,12 +76,43 @@ export const LectureSchema = z.object({
   chapterId: z.string().uuid({ message: "Invalid Lecture Id" }),
   description: z
     .string()
-    .min(3, { message: "description must be at least 3 character long" }).optional(),
-    thumbnailKey : z.string().optional(),
-    videoKey: z.string().optional(),
-    pdfKey : z.string().optional()
+    .min(3, { message: "description must be at least 3 character long" })
+    .optional(),
+  thumbnailKey: z.string().optional(),
+  videoKey: z.string().optional(),
+  pdfKey: z.string().optional(),
+});
 
+export const ProfileSchema = z.object({
+  firstName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+  lastName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+  otherName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+
+  bio: z
+    .string()
+    .min(3, { message: "Your Bio must be 3 character Long" })
+    .max(100, { message: "Your Bio must not exceed 100 characters" }),
+
+  phone: z
+    .string()
+    .min(11, { message: "Your phone Number cannot be less than 11" })
+    .max(11, { message: " Your phone number cannot exceed 11" }),
+
+  faculty: z.enum(faculties as [Faculty, ...Faculty[]]),
+  department: z.string().min(1, { message: "Department is required" }),
+  level: z.enum(courseLevel, { message: "Your Level is required" }),
+  avatarKey: z.string().min(1, { message: "Profile Picture is required" }),
+  matricNumber: z
+    .string()
+    .min(9, { message: " Your Matric number is required" }),
 });
 
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LectureSchemaType = z.infer<typeof LectureSchema>;
+export type ProfileSchemaType = z.infer<typeof ProfileSchema>;

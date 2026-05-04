@@ -12,17 +12,16 @@ model User {
   email         String     @unique
   emailVerified Boolean    @default(false)
   image         String?
-  matircNumber  String?
   status        UserStatus @default(STUDENT)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
   profile Profile?
 
-  sessions Session[]
-  accounts Account[]
-  courses  Course[] 
-  enrollment Enrollment[]
+  sessions        Session[]
+  accounts        Account[]
+  courses         Course[]
+  enrollment      Enrollment[]
   lectureProgress LectureProgress[]
 
   @@map("user")
@@ -38,12 +37,16 @@ model Profile {
   id     String @id @default(uuid())
   userId String @unique
 
-  bio        String?
-  phone      String?
-  faculty    String
-  department String?
-  level      CourseLevel?
-  avatarKey  String?
+  firstName    String
+  lastName     String
+  otherName    String?
+  bio          String?
+  phone        String?
+  faculty      String
+  department   String
+  level        CourseLevel
+  avatarKey    String
+  matricNumber String      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -120,7 +123,7 @@ model Course {
   slug       String       @unique
   status     CourseStatus @default(DRAFT)
 
-  userId String
+  userId String 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   chapters Chapter[]
@@ -182,7 +185,6 @@ model Lecture {
 
   lectureProgress LectureProgress[]
 
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -190,17 +192,17 @@ model Lecture {
   @@index([chapterId])
 }
 
-model Enrollment {  
+model Enrollment {
   id String @id @default(uuid())
 
-  status EnrollmentStatus @default(PENDING)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    EnrollmentStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
 
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   @@unique([userId, courseId])
@@ -208,7 +210,7 @@ model Enrollment {
 
 enum EnrollmentStatus {
   PENDING
-  ACTIVE 
+  ACTIVE
   CANCELLED
 }
 
@@ -221,7 +223,7 @@ model LectureProgress {
   updatedAt DateTime @updatedAt
 
   userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   lectureId String
   lecture   Lecture @relation(fields: [lectureId], references: [id], onDelete: Cascade)

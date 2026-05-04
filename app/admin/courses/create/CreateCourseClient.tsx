@@ -11,7 +11,6 @@ import {
 import {
   courseLevel,
   courseSchema,
-  courseStatus,
   levelLabels,
 } from "@/lib/zodSchema";
 import { ArrowLeft, Loader, PlusIcon, SparkleIcon } from "lucide-react";

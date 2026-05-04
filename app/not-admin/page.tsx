@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardContent
+  CardContent,
 } from "@/components/ui/card";
 import { ArrowLeft, ShieldX } from "lucide-react";
 import Link from "next/link";
@@ -34,15 +34,17 @@ export default function NotAdminRoute() {
           </p>
         </CardContent>
 
-        <Link
-          href="/"
-          className={buttonVariants({
-            className: "w-full",
-          })}
-        >
-          <ArrowLeft className="size-4" />
-          Back to home
-        </Link>
+        <div className="p-4">
+          <Link
+            href="/"
+            className={buttonVariants({
+              className: "w-full  ",
+            })}
+          >
+            <ArrowLeft className="size-4" />
+            Back to home
+          </Link>
+        </div>
       </Card>
     </div>
   );

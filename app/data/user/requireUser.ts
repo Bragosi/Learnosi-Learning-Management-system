@@ -8,7 +8,7 @@ export const RequireUser = cache(async () => {
     headers: await headers(),
   });
 
-  if (!session) {
+  if (!session?.user) {
     redirect("/login");
   }
 
