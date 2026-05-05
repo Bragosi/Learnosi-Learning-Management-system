@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { facultyDepartments, type Faculty } from "./facultyDepartments";
+import { LecturerPost } from "@prisma/client";
+
 export const courseLevel = [
   "LEVEL_100",
   "LEVEL_200",
@@ -16,6 +18,11 @@ export const levelLabels: Record<(typeof courseLevel)[number], string> = {
   LEVEL_400: "400 Level",
   LEVEL_500: "500 Level",
 };
+export const lecturerPosts = {
+  PROF: "Professor",
+  LECTURER: "Lecturer",
+  ASSISTANT_LECTURER: "Assistant Lecturer",
+} satisfies Record<keyof typeof LecturerPost, string>;
 const faculties = Object.keys(facultyDepartments) as Faculty[];
 
 export const courseSchema = z
@@ -113,6 +120,33 @@ export const ProfileSchema = z.object({
     .min(9, { message: " Your Matric number is required" }),
 });
 
+export const LecturerRequestSchema = z.object({
+  profilePicture: z.string().min(1, { message: "Profile Picture is required" }),
+  firstName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+  lastName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+  otherName: z
+    .string()
+    .min(3, { message: "Name must not be less than 3 characters" }),
+  faculty: z.enum(faculties as [Faculty, ...Faculty[]]),
+  department: z.string().min(1, { message: "Department is required" }),
+  email: z
+    .string()
+    .min(3, { message: "Email must not be less than 3 characters" }),
+  employeeId: z
+    .string()
+    .min(3, { message: "Employee Id must not be less than 3 characters" }),
+  post: z.enum(["PROF", "LECTURER", "ASSISTANT_LECTURER"]),
+  phone: z
+    .string()
+    .min(11, { message: "Your phone Number cannot be less than 11" })
+    .max(11, { message: " Your phone number cannot exceed 11" }),
+});
+
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LectureSchemaType = z.infer<typeof LectureSchema>;
 export type ProfileSchemaType = z.infer<typeof ProfileSchema>;
+export type LecturerRequestSchemaType = z.infer<typeof LecturerRequestSchema>;

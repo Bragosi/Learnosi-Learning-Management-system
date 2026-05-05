@@ -23,6 +23,7 @@ model User {
   courses         Course[]
   enrollment      Enrollment[]
   lectureProgress LectureProgress[]
+  lecturerRequest LecturerRequest?
 
   @@map("user")
 }
@@ -123,7 +124,7 @@ model Course {
   slug       String       @unique
   status     CourseStatus @default(DRAFT)
 
-  userId String 
+  userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   chapters Chapter[]
@@ -231,4 +232,40 @@ model LectureProgress {
   @@unique([userId, lectureId], name: "userId_lectureId")
   @@index([userId])
   @@index([lectureId])
+}
+
+model LecturerRequest {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName String
+  otherName String
+  status RequestStatus @default(PENDING)
+
+  profilePicture String
+  post           LecturerPost
+
+  faculty    String
+  department String
+  email      String
+  phone     String
+
+  employeeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LecturerPost {
+  PROF
+  LECTURER
+  ASSISTANT_LECTURER
 }
