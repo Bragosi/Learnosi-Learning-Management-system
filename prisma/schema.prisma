@@ -237,20 +237,20 @@ model LectureProgress {
 model LecturerRequest {
   id String @id @default(uuid())
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String        @unique
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName String
-  lastName String
+  lastName  String
   otherName String
-  status RequestStatus @default(PENDING)
+  status    RequestStatus @default(PENDING)
 
-  profilePicture String
-  post           LecturerPost
-
-  faculty    String
-  department String
-  email      String
-  phone     String
+  profilePicture      String
+  post                LecturerPost
+  professionalSummary String
+  faculty             String
+  department          String
+  email               String
+  phone               String
 
   employeeId String
 

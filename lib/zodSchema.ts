@@ -8,7 +8,7 @@ export const courseLevel = [
   "LEVEL_300",
   "LEVEL_400",
   "LEVEL_500",
-] as const;
+] as const; 
 export const courseStatus = ["PUBLISHED", "DRAFT", "ARCHIVED"] as const;
 
 export const levelLabels: Record<(typeof courseLevel)[number], string> = {
@@ -34,7 +34,7 @@ export const courseSchema = z
 
     description: z
       .string()
-      .min(10, { message: "Description must be at least 10 characters long" }),
+       .min(10, { message: "Description must be at least 10 characters long" }),
 
     fileKey: z.string().min(1, { message: "File is required" }),
     level: z.enum(courseLevel, { message: "Level is required" }),
@@ -144,6 +144,10 @@ export const LecturerRequestSchema = z.object({
     .string()
     .min(11, { message: "Your phone Number cannot be less than 11" })
     .max(11, { message: " Your phone number cannot exceed 11" }),
+    professionalSummary: z
+    .string()
+    .min(10, { message: "Professional Summary must be at least 10 characters long" })
+    .max(700, { message: "Professional Summary must not exceed 700 characters" }),
 });
 
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;

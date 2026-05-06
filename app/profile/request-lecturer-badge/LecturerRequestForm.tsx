@@ -41,6 +41,7 @@ import { Loader, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { LecturerPost } from "@prisma/client";
+import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 
 export default function LecturerRequest() {
   const router = useRouter();
@@ -59,6 +60,7 @@ export default function LecturerRequest() {
       employeeId: "",
       post: "LECTURER",
       phone: "",
+      professionalSummary: "",
     },
   });
 
@@ -192,6 +194,23 @@ export default function LecturerRequest() {
                 />
               </div>
 
+              <FormField
+                control={form.control}
+                name="professionalSummary"
+                render={({ field }) => (
+                  <div className="w-full">
+                    <FormItem>
+                      <FormLabel>Professional Summary</FormLabel>
+                      <FormControl>
+                        <div className="w-full mt-2">
+                          <RichTextEditor field={field} />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
+                )}
+              />
               {/* PHONE */}
               <FormField
                 control={form.control}

@@ -48,8 +48,8 @@ const data = {
       icon: <ListIcon />,
     },
     {
-      title: "Analytics",
-      url: "#",
+      title: "Badge Requests",
+      url: "/admin/badge-requests",
       icon: <ChartBarIcon />,
     },
     {
