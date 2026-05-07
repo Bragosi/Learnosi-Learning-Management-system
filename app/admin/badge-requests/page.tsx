@@ -1,8 +1,10 @@
-
 import { EmptyState } from "@/components/general/EmptyState";
 import { Suspense } from "react";
 import { AdminGetLecturerBadgeRequests } from "@/app/data/admin/AdminGetLecturerBadgeRequests";
-import { LecturerRequestCard, LecturerRequestCardSkeleton } from "./_components/LecturerRequestCard";
+import {
+  LecturerRequestCard,
+  LecturerRequestCardSkeleton,
+} from "./_components/LecturerRequestCard";
 
 export default async function BadgeRequestsPage() {
   return (

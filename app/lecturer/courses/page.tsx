@@ -1,14 +1,18 @@
-import { adminGetCourses } from "@/app/data/admin/admin-get-courses";
-import {
-  AdminCoursecard,
-  AdminCourseCardSkeleton,
-} from "./_component/AdminCourseCard";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
+import { PlusCircleIcon } from "lucide-react";
 import { EmptyState } from "@/components/general/EmptyState";
 import { Suspense } from "react";
 import { UserStatus } from "@prisma/client";
 import { requireRole } from "@/lib/requireRole";
+import {
+  LecturerCoursecard,
+  LecturerCourseCardSkeleton,
+} from "./_components/LecturerCourseCard";
+import { lecturerGetCourses } from "@/app/data/lecturer/lecturerGetCourses";
+
 export default async function CoursesPage() {
-  await requireRole([UserStatus.ADMIN]);
+  await requireRole([UserStatus.LECTURER]);
 
   return (
     <div className="space-y-8">
@@ -17,12 +21,20 @@ export default async function CoursesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Your Courses</h1>
           <p className="text-muted-foreground text-sm">
-            Manage and monitor created courses
+            Manage and monitor your created courses
           </p>
         </div>
+
+        <Link
+          href="/lecturer/courses/create"
+          className={buttonVariants({ className: "w-fit" })}
+        >
+          <PlusCircleIcon className="size-4" />
+          Create Course
+        </Link>
       </div>
 
-      <Suspense fallback={<AdminCourseCardSkeletonLayout />}>
+      <Suspense fallback={<LecturerCourseCardSkeletonLayout />}>
         <RenderCourses />
       </Suspense>
     </div>
@@ -30,7 +42,9 @@ export default async function CoursesPage() {
 }
 
 async function RenderCourses() {
-  const data = await adminGetCourses();
+  const user = await requireRole([UserStatus.LECTURER]);
+
+  const data = await lecturerGetCourses(user.id);
   return (
     <>
       {data.length === 0 ? (
@@ -43,7 +57,7 @@ async function RenderCourses() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.map((course) => (
-            <AdminCoursecard key={course.id} data={course} />
+            <LecturerCoursecard key={course.id} data={course} />
           ))}
         </div>
       )}
@@ -51,11 +65,11 @@ async function RenderCourses() {
   );
 }
 
-function AdminCourseCardSkeletonLayout() {
+function LecturerCourseCardSkeletonLayout() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: 6 }).map((_, index) => (
-        <AdminCourseCardSkeleton key={index} />
+        <LecturerCourseCardSkeleton key={index} />
       ))}
     </div>
   );

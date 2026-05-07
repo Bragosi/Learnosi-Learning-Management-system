@@ -22,6 +22,7 @@ import {
   LogOutIcon,
   LayoutDashboard,
   Tv2,
+  AlignVerticalJustifyCenter,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,7 @@ type Session = {
   };
 } | null;
 
-export function NavUser({ session }: { session: Session }) {
+export function StudentNavUser({ session }: { session: Session }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -119,14 +120,21 @@ export function NavUser({ session }: { session: Session }) {
 
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/admin">
+                <Link href="/dashboard">
                   <LayoutDashboard /> Dashboard
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/badge-requests">
-                  <Tv2 /> Badge Requests
+                <Link href="/courses">
+                  <Tv2 />
+                  Explore Courses
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/profile/request-lecturer-badge">
+                  <AlignVerticalJustifyCenter />Request Lecturer Badge
+                </Link>
+
               </DropdownMenuItem>
             </DropdownMenuGroup>
 

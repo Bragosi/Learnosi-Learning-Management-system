@@ -5,18 +5,16 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useConstructUrl } from "@/hooks/useContructUrl";;
+import { useConstructUrl } from "@/hooks/useContructUrl";
 import {
   ArrowRight,
   BookOpen,
   IdCard,
   MoreVerticalIcon,
   School,
-  Trash2,
   User,
 } from "lucide-react";
 import Image from "next/image";
@@ -41,12 +39,9 @@ export function LecturerRequestCard({ data }: iAppProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link href={`/admin/badge-requests/${data.id}`}>View Details</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
-              <Trash2 className="size-4 mr-2" />
-              Delete
+              <Link href={`/admin/badge-requests/${data.id}`}>
+                View Details
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -61,55 +56,64 @@ export function LecturerRequestCard({ data }: iAppProps) {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
-        {/* Content */}
-        <CardContent className="flex flex-col justify-between flex-1 p-5 space-y-5">
-          {/* Name */}
+      {/* Content */}
+      <CardContent className="flex flex-col justify-between flex-1 p-5 space-y-5">
+        {/* Name */}
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-full bg-primary/10">
+            <User className="size-5 text-primary" />
+          </div>
+          <p className="font-semibold text-base leading-tight line-clamp-1">
+            {data.firstName} {data.lastName} {data.otherName && data.otherName}
+          </p>
+        </div>
+
+        {/* Info */}
+        <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-primary/10">
-              <User className="size-5 text-primary" />
+            <div className="p-2 rounded-md bg-primary/10">
+              <IdCard className="size-4 text-primary" />
             </div>
-            <p className="font-semibold text-base leading-tight line-clamp-1">
-              {data.firstName} {data.lastName}{" "}
-              {data.otherName && data.otherName}
-            </p>
+            <span className="truncate">{data.employeeId}</span>
           </div>
 
-          {/* Info */}
-          <div className="space-y-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-md bg-muted">
-                <IdCard className="size-4" />
-              </div>
-              <span className="truncate">{data.employeeId}</span>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-md bg-primary/10">
+              <School className="size-4 text-primary" />
             </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-md bg-muted">
-                <School className="size-4" />
-              </div>
-              <span className="truncate">{data.faculty}</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-md bg-muted">
-                <BookOpen className="size-4" />
-              </div>
-              <span className="truncate">{data.department}</span>
-            </div>
+            <span className="truncate">{data.faculty}</span>
           </div>
 
-          {/* CTA */}
-          <Link
-            href={`/admin/badge-requests/${data.id}`}
-            className={buttonVariants({
-              className:
-                "w-full mt-2 rounded-xl shadow-sm hover:shadow-md transition flex items-center justify-center gap-2",
-            })}
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-md bg-primary/10">
+              <BookOpen className="size-4 text-primary" />
+            </div>
+            <span className="truncate">{data.department}</span>
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full flex items-center justify-center"
+            disabled
           >
-            Review Request
-            <ArrowRight className="size-4" />
-          </Link>
-        </CardContent>
+            <h1>Learnosi Status :</h1>
+            <span className="truncate">{data.user.status}</span>
+          </Button>
+        </div>
+
+        {/* CTA */}
+        <Link
+          href={`/admin/badge-requests/${data.id}`}
+          className={buttonVariants({
+            className:
+              "w-full rounded-xl shadow-sm hover:shadow-md transition flex items-center justify-center gap-2",
+          })}
+        >
+          Review Request
+          <ArrowRight className="size-4" />
+        </Link>
+      </CardContent>
     </Card>
   );
 }

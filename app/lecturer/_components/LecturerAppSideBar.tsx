@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
-  ChartBarIcon,
+  ListIcon,
+  FolderIcon,
+  UsersIcon,
   CameraIcon,
   FileTextIcon,
   Settings2Icon,
@@ -29,20 +31,31 @@ import Image from "next/image";
 import Logo from "@/public/Learnosi Logo.png";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { LecturerNavUser } from "@/components/sidebar/lecturer-nav-user";
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/admin",
+      url: "/lecturer",
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Badge Requests",
-      url: "/admin/badge-requests",
-      icon: <ChartBarIcon />,
+      title: "My Courses",
+      url: "/lecturer/courses",
+      icon: <ListIcon />,
+    },
+    {
+      title: "Projects",
+      url: "#",
+      icon: <FolderIcon />,
+    },
+    {
+      title: "Team",
+      url: "#",
+      icon: <UsersIcon />,
     },
   ],
   navClouds: [
@@ -129,7 +142,7 @@ const data = {
   ],
 };
 
-export async function AppSidebar({
+export async function LecturerAppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const session = await auth.api.getSession({
@@ -146,7 +159,7 @@ export async function AppSidebar({
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <Link
-                href="/admin"
+                href="/lecturer"
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
                   "flex items-center gap-2 px-2 py-1 justify-start",
@@ -167,7 +180,7 @@ export async function AppSidebar({
       </SidebarContent>
       <SidebarFooter>
         {session ? (
-          <NavUser
+          <LecturerNavUser
             session={{
               ...session,
               user: {

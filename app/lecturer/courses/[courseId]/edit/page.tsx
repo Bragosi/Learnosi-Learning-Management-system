@@ -11,10 +11,11 @@ import { EditCourseForm } from "./_component/EditCourseForm";
 import CourseStructure from "./_component/CourseStructure";
 import { requireRole } from "@/lib/requireRole";
 import { UserStatus } from "@prisma/client";
+
 type Params = Promise<{ courseId: string }>;
 
 export default async function EditRoute({ params }: { params: Params }) {
-  await requireRole([UserStatus.LECTURER, UserStatus.ADMIN]);
+  await requireRole([UserStatus.LECTURER]);
   const { courseId } = await params;
 
   const data = await AdminGetSingleCourse(courseId);

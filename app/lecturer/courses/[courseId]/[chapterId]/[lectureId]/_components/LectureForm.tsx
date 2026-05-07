@@ -26,11 +26,11 @@ import { ArrowLeft, Loader } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useTransition } from "react";
-import { updateLecture } from "../action";
 import { toast } from "sonner";
 import { tryCatch } from "@/hooks/try-catch";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { updateLecture } from "../action";
 
 interface iAppProps {
   data: AdminLectureType;
@@ -69,7 +69,7 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
 
       if (result?.status === "success") {
         toast.success(result.message);
-        router.push(`/admin/courses/${courseId}/edit`);
+        router.push(`/lecturer/courses/${courseId}/edit`);
       } else if (result?.status === "error") {
         toast.error(result.message);
       }
@@ -79,7 +79,7 @@ export function LectureForm({ chapterId, data, courseId }: iAppProps) {
     <div>
       <Link
         className={cn(buttonVariants({ variant: "outline" }), "mb-4")}
-        href={`/admin/courses/${courseId}/edit`}
+        href={`/lecturer/courses/${courseId}/edit`}
       >
         <ArrowLeft className="size-4" />
         <span>Go Back</span>

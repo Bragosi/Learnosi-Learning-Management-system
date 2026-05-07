@@ -25,7 +25,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        {pathname.startsWith("/admin") && (
+        {pathname.startsWith("/lecturer") && (
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
               <SidebarMenuButton
@@ -33,7 +33,7 @@ export function NavMain({
                 tooltip="Quick Create"
                 className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
               >
-                <Link href="/admin/courses/create">
+                <Link href="/lecturer/courses/create">
                   <CirclePlusIcon />
                   <span>Quick Create</span>
                 </Link>

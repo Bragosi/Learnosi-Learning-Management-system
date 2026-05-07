@@ -1,7 +1,8 @@
 "use server";
 
+import { assertCourseOwnership } from "@/lib/AssertCourseOwnerShip.";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/requireAdmin";
+import { requireLecturer } from "@/lib/requireLecturer";
 import { ApiResponse } from "@/lib/types";
 import { LectureSchema, LectureSchemaType } from "@/lib/zodSchema";
 
@@ -9,7 +10,7 @@ export async function updateLecture(
   values: LectureSchemaType,
   lectureId: string,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
   try {
     const result = LectureSchema.safeParse(values);
 
@@ -20,6 +21,24 @@ export async function updateLecture(
       };
     }
 
+    const chapter = await prisma.chapter.findUnique({
+      where: {
+        id: result.data.chapterId,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+
+    if (!chapter) {
+      return {
+        status: "error",
+        message: "Chapter not found",
+      };
+    }
+
+    await assertCourseOwnership(chapter.courseId, user.id);
+
     await prisma.lecture.update({
       where: {
         id: lectureId,
@@ -29,7 +48,7 @@ export async function updateLecture(
         description: result.data.description,
         thumbnailKey: result.data.thumbnailKey,
         videoKey: result.data.videoKey,
-        pdfKey: result.data.pdfKey
+        pdfKey: result.data.pdfKey,
       },
     });
 

@@ -8,6 +8,7 @@ export async function GetMyProfile() {
     where: { id: session.id },
     select: {
       id: true,
+      status : true,
       profile: {
         select: {
           id: true,

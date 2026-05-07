@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-export const requireAdmin = cache(async () => {
+export const requireLecturer = cache(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -28,7 +28,7 @@ export const requireAdmin = cache(async () => {
     throw new Error("User not found");
   }
 
-  if (user.status !== "ADMIN") {
+  if (user.status !== "LECTURER") {
     redirect("/not-admin");
   }
   return user;

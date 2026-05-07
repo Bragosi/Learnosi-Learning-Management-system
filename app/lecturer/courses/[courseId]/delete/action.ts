@@ -1,19 +1,21 @@
 "use server";
 
+import { assertCourseOwnership } from "@/lib/AssertCourseOwnerShip.";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/requireAdmin";
+import { requireLecturer } from "@/lib/requireLecturer";
 import { ApiResponse } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function deleteCourse(courseId: string): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
   try {
+    await assertCourseOwnership(courseId, user.id);
     await prisma.course.delete({
       where: {
         id: courseId,
       },
     });
-    revalidatePath("/admin/courses");
+    revalidatePath("/lecturer/courses");
 
     return {
       status: "success",

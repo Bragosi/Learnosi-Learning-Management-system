@@ -39,19 +39,14 @@ import {
 } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Faculty, facultyDepartments } from "@/lib/facultyDepartments";
-import { AdminCourseType } from "@/app/data/admin/admin-get-courses";
-import { EditCourse } from "../action";
+import { CreateCourse } from "./action";
 
-interface iAppProps {
-  value: AdminCourseType;
-}
-
-export function EditCourseForm({ value }: iAppProps) {
+export default function CreateCoursePage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -59,24 +54,21 @@ export function EditCourseForm({ value }: iAppProps) {
     resolver: zodResolver(courseSchema),
     mode: "onChange",
     defaultValues: {
-      courseCode: value.courseCode,
-      description: value.description,
-      fileKey: value.fileKey,
-      level: value.level,
-      faculty: value.faculty,
-      courseTitle: value.courseTitle,
-      slug: value.slug,
-      status: value.status,
-      department: value.department,
+      courseCode: "",
+      description: "",
+      fileKey: "",
+      level: "LEVEL_100",
+      faculty: "School of Computing",
+      courseTitle: "",
+      slug: "",
+      status: "DRAFT",
+      department: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof courseSchema>) {
     startTransition(async () => {
-      // FIX: pass 'data' instead of 'values'
-      const { data: result, error } = await tryCatch(
-        EditCourse(data, value.id),
-      );
+      const { data: result, error } = await tryCatch(CreateCourse(data));
 
       if (error) {
         toast.error("An Unexpected Error occurred. Please try again.");
@@ -86,13 +78,21 @@ export function EditCourseForm({ value }: iAppProps) {
       if (result?.status === "success") {
         toast.success(result.message);
         form.reset();
-        router.push("/admin/courses");
+        router.push("/lecturer/courses");
       } else if (result?.status === "error") {
         toast.error(result.message);
       }
     });
   }
+
   const selectedFaculty = form.watch("faculty");
+
+  useEffect(() => {
+    form.setValue("department", "", {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [selectedFaculty]);
   const faculties = Object.keys(facultyDepartments) as Faculty[];
   const departments = facultyDepartments[selectedFaculty] || [];
   return (
@@ -125,7 +125,7 @@ export function EditCourseForm({ value }: iAppProps) {
                     <FormLabel>Course Code</FormLabel>
                     <FormControl>
                       <Input
-                        className="mt-1"
+                        className="mt-2"
                         placeholder="Input Course Code"
                         {...field}
                       />
@@ -146,7 +146,7 @@ export function EditCourseForm({ value }: iAppProps) {
                       <FormControl>
                         <Textarea
                           placeholder="e.g Software Engineering"
-                          className="min-h-20 mt-1"
+                          className="min-h-20  mt-2"
                           {...field}
                         />
                       </FormControl>
@@ -167,7 +167,7 @@ export function EditCourseForm({ value }: iAppProps) {
                         <FormLabel>Slug</FormLabel>
                         <FormControl>
                           <Input
-                            className="mt-1"
+                            className="mt-2"
                             placeholder="Slug"
                             {...field}
                           />
@@ -203,7 +203,7 @@ export function EditCourseForm({ value }: iAppProps) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <div className="w-full mt-1">
+                        <div className="w-full mt-2">
                           <RichTextEditor field={field} />
                         </div>
                       </FormControl>
@@ -216,11 +216,11 @@ export function EditCourseForm({ value }: iAppProps) {
                 control={form.control}
                 name="fileKey"
                 render={({ field }) => (
-                  <div className="w-full">
+                  <div className="w-full ">
                     <FormItem>
                       <FormLabel>Thumbnail Image</FormLabel>
                       <FormControl>
-                        <div className="mt-1 w-full">
+                        <div className="mt-2 w-full">
                           <Uploader
                             fileTypeAccepted="image"
                             onChange={field.onChange}
@@ -241,7 +241,7 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Faculty</FormLabel>
-                        <div className="mt-1">
+                        <div className="mt-2">
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -260,6 +260,7 @@ export function EditCourseForm({ value }: iAppProps) {
                             </SelectContent>
                           </Select>
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -273,7 +274,7 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Department</FormLabel>
-                        <div className="mt-1">
+                        <div className="mt-2">
                           <Select
                             onValueChange={field.onChange}
                             value={field.value}
@@ -307,7 +308,7 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Level</FormLabel>
-                        <div className="mt-1 w-full">
+                        <div className="mt-2">
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -338,7 +339,8 @@ export function EditCourseForm({ value }: iAppProps) {
                     <div className="w-full">
                       <FormItem>
                         <FormLabel>Status</FormLabel>
-                        <div className="w-full mt-1">
+
+                        <div className="mt-2">
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -348,6 +350,7 @@ export function EditCourseForm({ value }: iAppProps) {
                                 <SelectValue placeholder="Select Status" />
                               </SelectTrigger>
                             </FormControl>
+
                             <SelectContent>
                               {courseStatus.map((status) => (
                                 <SelectItem key={status} value={status}>
@@ -357,6 +360,7 @@ export function EditCourseForm({ value }: iAppProps) {
                             </SelectContent>
                           </Select>
                         </div>
+
                         <FormMessage />
                       </FormItem>
                     </div>
@@ -364,15 +368,16 @@ export function EditCourseForm({ value }: iAppProps) {
                 />
               </div>
 
+              {/* FIX: Removed <p> from inside the button for valid HTML */}
               <Button type="submit" disabled={isPending}>
                 {isPending ? (
                   <span className="flex items-center">
                     <Loader className="animate-spin size-4 mr-2" />
-                    Updating Course Info...
+                    Creating Course...
                   </span>
                 ) : (
                   <span className="flex items-center">
-                    Edit Course <PlusIcon className="ml-2 size-4" />
+                    Create Course <PlusIcon className="ml-2 size-4" />
                   </span>
                 )}
               </Button>

@@ -10,7 +10,7 @@ type Params = Promise<{
 }>;
 
 export default async function LectureIdPage({ params }: { params: Params }) {
-  await requireRole([UserStatus.LECTURER, UserStatus.ADMIN]);
+  await requireRole([UserStatus.LECTURER]);
   const { chapterId, courseId, lectureId } = await params;
   const lecture = await adminGetLecture(lectureId);
 

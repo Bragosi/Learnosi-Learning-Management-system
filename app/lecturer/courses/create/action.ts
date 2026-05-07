@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/requireAdmin";
+import { requireLecturer } from "@/lib/requireLecturer";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema } from "@/lib/zodSchema";
 import { headers } from "next/headers";
@@ -14,7 +14,7 @@ export type CourseSchemaType = z.infer<typeof courseSchema>;
 export async function CreateCourse(
   values: CourseSchemaType,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  await requireLecturer();
   try {
     const session = await auth.api.getSession({
       headers: await headers(),

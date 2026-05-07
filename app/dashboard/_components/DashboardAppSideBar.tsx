@@ -33,6 +33,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { StudentNavUser } from "@/components/sidebar/student-nav-user";
 
 const data = {
   navMain: [
@@ -179,7 +180,7 @@ export async function DashboardAppSidebar({
       </SidebarContent>
       <SidebarFooter>
         {session ? (
-          <NavUser
+          <StudentNavUser
             session={{
               ...session,
               user: {

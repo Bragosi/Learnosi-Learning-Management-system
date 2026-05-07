@@ -21,7 +21,6 @@ import {
   EllipsisVerticalIcon,
   LogOutIcon,
   LayoutDashboard,
-  Tv2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,7 +35,7 @@ type Session = {
   };
 } | null;
 
-export function NavUser({ session }: { session: Session }) {
+export function LecturerNavUser({ session }: { session: Session }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -119,13 +118,8 @@ export function NavUser({ session }: { session: Session }) {
 
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/admin">
+                <Link href="/lecturer">
                   <LayoutDashboard /> Dashboard
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/admin/badge-requests">
-                  <Tv2 /> Badge Requests
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>

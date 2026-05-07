@@ -17,12 +17,13 @@ import { Suspense } from "react";
 export default async function AdminIndexPage() {
   const enrollmentData = await AdminGetEnrollmentStats();
   const stats = await TotalAppUsers();
-  await requireRole([UserStatus.LECTURER, UserStatus.ADMIN]);
+  await requireRole([UserStatus.ADMIN]);
   return (
     <>
       <SectionCards stats={stats} />
       <ChartAreaInteractive data={enrollmentData} />
-      <div className="space-y-4">
+{ /** 
+     <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Recent Courses</h2>
           <Link
@@ -36,6 +37,7 @@ export default async function AdminIndexPage() {
           <RenderRecentCourses />
         </Suspense>
       </div>
+      */}
     </>
   );
 }

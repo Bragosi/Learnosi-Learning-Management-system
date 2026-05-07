@@ -292,7 +292,7 @@ export default function CourseStructure({ data }: iAppProps) {
                                       </Button>
                                       <FileText className="size-4 text-muted-foreground" />
                                       <Link
-                                        href={`/admin/courses/${data.id}/${item.id}/${lecture.id}`}
+                                        href={`/lecturer/courses/${data.id}/${item.id}/${lecture.id}`}
                                         className="text-sm hover:underline"
                                       >
                                         {lecture.title}

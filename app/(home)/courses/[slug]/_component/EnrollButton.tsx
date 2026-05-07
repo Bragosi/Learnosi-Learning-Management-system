@@ -28,7 +28,7 @@ export default function EnrollButton({
         toast.error(res.message);
       } else {
         toast.success("Registration successful")
-        router.push("/")
+        router.push("/dashboard")
       }
     });
   }

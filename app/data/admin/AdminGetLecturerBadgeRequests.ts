@@ -16,12 +16,19 @@ export async function AdminGetLecturerBadgeRequests() {
       post: true,
       phone: true,
       profilePicture: true,
-      createdAt : true,
+      createdAt: true,
       professionalSummary: true,
+      user: {
+        select: {
+          id: true,
+          email: true,
+          status: true,
+        },
+      },
     },
-    orderBy :{
-        createdAt : "desc"
-    }
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return data;
 }

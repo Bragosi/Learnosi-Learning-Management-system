@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useTransition } from "react";
-import { deleteCourse } from "./action";
 import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
 import { useRouter, useParams } from "next/navigation";
 import { Loader, Trash2, AlertTriangle } from "lucide-react";
+import { deleteCourse } from "./action";
 
 export default function DeleteCourseRoute() {
   const router = useRouter();
@@ -72,7 +72,7 @@ export default function DeleteCourseRoute() {
 
           <div className="flex gap-3 pt-2">
             <Link
-              href="/admin/courses"
+              href="/lecturer/courses"
               className="flex-1"
             >
               <Button variant="outline" className="w-full">

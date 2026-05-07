@@ -9,16 +9,17 @@ import {
   LectureSchema,
 } from "@/lib/zodSchema";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/requireAdmin";
+import { requireLecturer } from "@/lib/requireLecturer";
+import { assertCourseOwnership } from "@/lib/AssertCourseOwnerShip.";
 
 export async function EditCourse(
   data: CourseSchemaType,
   courseId: string,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
+  await assertCourseOwnership(courseId, user.id);
+
   try {
     const result = courseSchema.safeParse(data);
     if (!result.success) {
@@ -28,11 +29,7 @@ export async function EditCourse(
       };
     }
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return {
         status: "error",
         message: "Unauthorized",
@@ -42,7 +39,7 @@ export async function EditCourse(
     await prisma.course.update({
       where: {
         id: courseId,
-        userId: session.user.id,
+        userId: user.id,
       },
       data: {
         ...result.data,
@@ -66,7 +63,8 @@ export async function reOrderLessons(
   lessons: { id: string; position: number }[],
   courseId: string,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
+  await assertCourseOwnership(courseId, user.id);
   try {
     if (!lessons || lessons.length === 0) {
       return {
@@ -87,7 +85,7 @@ export async function reOrderLessons(
       }),
     );
     await prisma.$transaction(updates);
-    revalidatePath(`/admin/courses/${courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${courseId}/edit`);
     return {
       status: "success",
       message: "Lessons Successfully Reordered",
@@ -104,7 +102,8 @@ export async function reOrderChapters(
   courseId: string,
   chapters: { id: string; position: number }[],
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
+  await assertCourseOwnership(courseId, user.id);
   try {
     if (!chapters || chapters.length === 0) {
       return {
@@ -123,7 +122,7 @@ export async function reOrderChapters(
       }),
     );
     await prisma.$transaction(updates);
-    revalidatePath(`/admin/courses/${courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${courseId}/edit`);
     return {
       status: "success",
       message: "Chapters Successfully Reordered",
@@ -139,7 +138,7 @@ export async function reOrderChapters(
 export async function createChapter(
   values: ChapterSchemaType,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
   try {
     const result = chapterSchema.safeParse(values);
 
@@ -149,6 +148,8 @@ export async function createChapter(
         message: "Invalid data",
       };
     }
+
+    await assertCourseOwnership(result.data.courseId, user.id);
     await prisma.$transaction(async (tx) => {
       const maxPosition = await tx.chapter.findFirst({
         where: {
@@ -169,7 +170,7 @@ export async function createChapter(
         },
       });
     });
-    revalidatePath(`/admin/courses/${result.data.courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${result.data.courseId}/edit`);
 
     return {
       status: "success",
@@ -186,7 +187,7 @@ export async function createChapter(
 export async function createLecture(
   values: ChapterSchemaType,
 ): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
   try {
     const result = LectureSchema.safeParse(values);
 
@@ -196,6 +197,25 @@ export async function createLecture(
         message: "Invalid data",
       };
     }
+    const chapter = await prisma.chapter.findUnique({
+      where: {
+        id: result.data.chapterId,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+
+    if (!chapter) {
+      return {
+        status: "error",
+        message: "Chapter not found",
+      };
+    }
+
+    // 🔐 STEP 2: verify ownership of course
+    await assertCourseOwnership(chapter.courseId, user.id);
+
     await prisma.$transaction(async (tx) => {
       const maxPosition = await tx.lecture.findFirst({
         where: {
@@ -220,7 +240,7 @@ export async function createLecture(
         },
       });
     });
-    revalidatePath(`/admin/courses/${result.data.courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${result.data.courseId}/edit`);
 
     return {
       status: "success",
@@ -243,7 +263,8 @@ export async function deleteLecture({
   courseId: string;
   lectureId: string;
 }): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
+  await assertCourseOwnership(courseId, user.id);
   try {
     const chapterWithLecture = await prisma.chapter.findUnique({
       where: {
@@ -302,7 +323,7 @@ export async function deleteLecture({
       ...updates,
     ]);
 
-    revalidatePath(`/admin/courses/${courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${courseId}/edit`);
 
     return {
       status: "success",
@@ -323,7 +344,8 @@ export async function deleteChapter({
   chapterId: string;
   courseId: string;
 }): Promise<ApiResponse> {
-  await requireAdmin();
+  const user = await requireLecturer();
+  await assertCourseOwnership(courseId, user.id);
   try {
     const courseWithChapters = await prisma.course.findUnique({
       where: {
@@ -382,7 +404,7 @@ export async function deleteChapter({
       ...updates,
     ]);
 
-    revalidatePath(`/admin/courses/${courseId}/edit`);
+    revalidatePath(`/lecturer/courses/${courseId}/edit`);
 
     return {
       status: "success",
