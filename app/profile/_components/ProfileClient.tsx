@@ -26,6 +26,7 @@ interface iAppProps {
 export default function ProfileClient({ data }: iAppProps) {
   const avatarKey = data.profile?.avatarKey || "";
   const constructedUrl = useConstructUrl(avatarKey);
+  console.log(constructedUrl);
 
   if (!data.profile) {
     return (
@@ -59,6 +60,7 @@ export default function ProfileClient({ data }: iAppProps) {
                   src={thumbnailUrl}
                   alt="profile image"
                   fill
+                  sizes="(max-width: 640px) 96px, 128px"
                   className="object-cover"
                 />
               </div>

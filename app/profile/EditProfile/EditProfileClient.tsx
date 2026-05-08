@@ -23,7 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Logo from "@/public/Learnosi Logo.png";
+import Logo from "@/public/Learnosi-Logo.png";
 import { Input } from "@/components/ui/input";
 import {
   Select,

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/public/Learnosi Logo.png";
+import Logo from "@/public/Learnosi-Logo.png";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";

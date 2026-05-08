@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/public/Learnosi Logo.png";
+import Logo from "@/public/Learnosi-Logo.png";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { buttonVariants } from "./button";
