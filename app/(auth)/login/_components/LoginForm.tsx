@@ -17,11 +17,15 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import googleLogo from "@/public/google.svg"
+
+
 export function LoginForm() {
   const router = useRouter();
   const [googlePending, startGoogleTransition] = useTransition();
   const [emailPending, startEmailTransition] = useTransition();
   const [email, setEmail] = useState("");
+
+  
   async function signInWithGoogle() {
     startGoogleTransition(async () => {
       await authClient.signIn.social({

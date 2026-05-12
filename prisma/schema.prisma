@@ -16,7 +16,8 @@ model User {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
-  profile Profile?
+  profile         Profile?
+  lecturerProfile LecturerProfile?
 
   sessions        Session[]
   accounts        Account[]
@@ -241,7 +242,7 @@ model LecturerRequest {
   user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName String
   lastName  String
-  otherName String
+  otherName String?
   status    RequestStatus @default(PENDING)
 
   profilePicture      String
@@ -252,10 +253,43 @@ model LecturerRequest {
   email               String
   phone               String
 
-  employeeId String
+  employeeId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model LecturerProfile {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title LecturerPost
+
+  profilePicture String
+
+  firstName String
+  lastName  String
+  otherName String?
+
+  employeeId String @unique
+
+  bio String?
+
+  department String
+  faculty    String
+
+  officeLocation String?
+
+  email String
+
+  verified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 enum RequestStatus {

@@ -1,5 +1,6 @@
 // lib/profile-status.ts
 import { GetMyProfileType } from "@/app/data/user/GetMyProfile";
+import { GetLecturerProfileType } from "@/app/lecturer/GetLecturerProfile";
 
 export function isProfileComplete(data: GetMyProfileType) {
   const profile = data.profile;
@@ -13,5 +14,21 @@ export function isProfileComplete(data: GetMyProfileType) {
     !!profile.department &&
     !!profile.faculty &&
     !!profile.level
+  );
+}
+
+
+export function isLecturerProfileComplete(data : GetLecturerProfileType){
+    const profile = data.lecturerProfile;
+
+  if (!profile) return false;
+
+  return (
+    !!profile.firstName &&
+    !!profile.lastName &&
+    !!profile.profilePicture &&
+    !!profile.department &&
+    !!profile.faculty &&
+    !!profile.employeeId
   );
 }

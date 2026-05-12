@@ -3,7 +3,10 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { lecturerPosts, LecturerRequestSchema } from "@/lib/zodSchema";
+import {
+  lecturerPosts,
+  LecturerProfileSchema,
+} from "@/lib/zodSchema";
 import {
   Form,
   FormField,
@@ -12,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Faculty, facultyDepartments } from "@/lib/facultyDepartments";
 import { useRouter } from "next/navigation";
 import {
@@ -35,32 +38,28 @@ import {
 import { useEffect, useTransition } from "react";
 import { ProfileUploader } from "@/components/file-uploader/ProfileUploader";
 import { tryCatch } from "@/hooks/try-catch";
-import { CreateLecturerRequest } from "./action";
 import { toast } from "sonner";
-import { Loader, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { LecturerPost } from "@prisma/client";
-import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { Loader2,} from "lucide-react";
+import { CreateLecturerProfile } from "./action";
 
-export default function LecturerRequest() {
+export default function LecturerCompleteProfile() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LecturerRequestSchema>>({
-    resolver: zodResolver(LecturerRequestSchema),
+  const form = useForm<z.infer<typeof LecturerProfileSchema>>({
+    resolver: zodResolver(LecturerProfileSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       otherName: "",
+      bio: "",
+      email: "",
       faculty: "School of Computing",
       department: "",
-      email: "",
       profilePicture: "",
       employeeId: "",
-      post: "LECTURER",
-      phone: "",
-      professionalSummary: "",
+      title: "LECTURER",
+      officeLocation: "",
     },
   });
 
@@ -73,10 +72,10 @@ export default function LecturerRequest() {
   const faculties = Object.keys(facultyDepartments) as Faculty[];
   const departments = facultyDepartments[selectedFaculty] || [];
 
-  function onSubmit(data: z.infer<typeof LecturerRequestSchema>) {
+  function onSubmit(data: z.infer<typeof LecturerProfileSchema>) {
     startTransition(async () => {
       const { data: result, error } = await tryCatch(
-        CreateLecturerRequest(data),
+        CreateLecturerProfile(data),
       );
 
       if (error) {
@@ -87,7 +86,7 @@ export default function LecturerRequest() {
       if (result?.status === "success") {
         toast.success(result.message);
         form.reset();
-        router.push("/profile/request-lecturer-badge/lecturer-request-sent");
+        router.push("/lecturer");
       } else if (result?.status === "error") {
         toast.error(result.message);
       }
@@ -109,12 +108,13 @@ export default function LecturerRequest() {
             />
           </div>
 
-          <CardTitle className="text-xl sm:text-2xl font-bold">
-            Submit your Lecturer Badge Request
+          <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Complete Lecturer Profile
           </CardTitle>
 
           <CardDescription className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto">
-            Fill in your details be able to lecture on Learnosi .
+            Set up your lecturer profile to start creating courses, managing
+            academic content, and engaging with students on Learnosi.
           </CardDescription>
         </CardHeader>
 
@@ -194,38 +194,26 @@ export default function LecturerRequest() {
                 />
               </div>
 
+              {/* BIO */}
               <FormField
                 control={form.control}
-                name="professionalSummary"
-                render={({ field }) => (
-                  <div className="w-full">
-                    <FormItem>
-                      <FormLabel>Professional Summary</FormLabel>
-                      <FormControl>
-                        <div className="w-full mt-2">
-                          <RichTextEditor field={field} />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </div>
-                )}
-              />
-              {/* PHONE */}
-              <FormField
-                control={form.control}
-                name="phone"
+                name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel>Professional Bio</FormLabel>
                     <FormControl>
-                      <Input placeholder="080xxxxxxxx" {...field} />
+                      <Input
+                        className="h-12"
+                        placeholder="Tell students about your academic background, interests, and teaching experience..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {/* EMAIL */}
+
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -233,13 +221,46 @@ export default function LecturerRequest() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} />
+                      <Input placeholder="e.g : john@gmail.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
+              {/* employeeId */}
+              <FormField
+                control={form.control}
+                name="employeeId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Employee ID</FormLabel>
+
+                    <FormControl>
+                      <Input placeholder="EMP-2025-001" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* officeLocation */}
+              <FormField
+                control={form.control}
+                name="officeLocation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Office Location</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-12"
+                        placeholder="Faculty Building, Room 204"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* SCHOOL INFO */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Faculty */}
@@ -301,45 +322,34 @@ export default function LecturerRequest() {
                   )}
                 />
 
-                {/* post */}
                 <FormField
                   control={form.control}
-                  name="post"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your Title</FormLabel>
+                      <FormLabel>Title</FormLabel>
+
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select Title" />
+                            <SelectValue placeholder="Select academic title" />
                           </SelectTrigger>
                         </FormControl>
+
                         <SelectContent>
-                          {Object.values(LecturerPost).map((post) => (
-                            <SelectItem key={post} value={post}>
-                              {lecturerPosts[post]}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(lecturerPosts).map(
+                            ([value, label]) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            ),
+                          )}
                         </SelectContent>
                       </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                {/* Matric */}
-                <FormField
-                  control={form.control}
-                  name="employeeId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Employee ID</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your employee ID" {...field} />
-                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -349,37 +359,22 @@ export default function LecturerRequest() {
               {/* SUBMIT */}
               <div className="pt-2">
                 <Button
-                  className="w-full h-11 text-sm sm:text-base"
                   type="submit"
                   disabled={pending}
+                  className="w-full sm:w-auto min-w-55"
                 >
                   {pending ? (
-                    <span className="flex items-center justify-center">
-                      <Loader className="animate-spin size-4 mr-2" />
-                      Submitting Request...
+                    <span className="flex items-center">
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                      Saving Profile...
                     </span>
                   ) : (
-                    <span className="flex items-center justify-center">
-                      Submit Request <PlusIcon className="ml-2 size-4" />
-                    </span>
+                    "Complete Lecturer Profile"
                   )}
                 </Button>
               </div>
             </form>
           </Form>
-
-          {/* SECONDARY ACTION */}
-          <div className="mt-6">
-            <Link
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "w-full h-11 text-sm sm:text-base",
-              )}
-              href="/"
-            >
-              Not a Lecturer? Complete your student profile instead
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

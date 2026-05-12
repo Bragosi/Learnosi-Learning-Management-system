@@ -154,7 +154,67 @@ export const LecturerRequestSchema = z.object({
     }),
 });
 
+export const LecturerProfileSchema = z.object({
+  profilePicture: z.string().min(1, {
+    message: "Profile picture is required",
+  }),
+
+  firstName: z.string().trim().min(3, {
+    message: "First name must be at least 3 characters",
+  }),
+
+  lastName: z.string().trim().min(3, {
+    message: "Last name must be at least 3 characters",
+  }),
+
+  otherName: z.string().trim().optional(),
+
+  faculty: z.enum(faculties as [Faculty, ...Faculty[]]),
+
+  department: z.string().trim().min(1, {
+    message: "Department is required",
+  }),
+
+  email: z.string().email({
+    message: "Invalid email address",
+  }),
+
+  employeeId: z.string().trim().min(3, {
+    message: "Employee ID must be at least 3 characters",
+  }),
+
+  title: z.enum([
+    "PROF",
+    "LECTURER",
+    "ASSISTANT_LECTURER",
+  ]),
+
+  bio: z
+    .string()
+    .trim()
+    .min(10, {
+      message: "Bio must be at least 10 characters",
+    })
+    .max(500, {
+      message: "Bio must not exceed 500 characters",
+    })
+    .optional(),
+
+  officeLocation: z
+    .string()
+    .trim()
+    .min(3, {
+      message: "Office location must be at least 3 characters",
+    })
+    .max(100, {
+      message: "Office location must not exceed 100 characters",
+    })
+    .optional(),
+});
+
+
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LectureSchemaType = z.infer<typeof LectureSchema>;
 export type ProfileSchemaType = z.infer<typeof ProfileSchema>;
 export type LecturerRequestSchemaType = z.infer<typeof LecturerRequestSchema>;
+export type LecturerProfileSchemaType = z.infer<typeof LecturerProfileSchema>;
