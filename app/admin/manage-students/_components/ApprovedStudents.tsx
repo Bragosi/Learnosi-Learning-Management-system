@@ -1,7 +1,48 @@
-export default function ApprovedStudents(){
-    return(
-        <div>
-            <h1>Approved students</h1>
-        </div>
-    )
+"use client";
+
+import { AdminGetApprovedStudentsType } from "@/app/data/admin/AdminGetApprovedStudents";
+import { RevokeUserAccess } from "./RevokeUserAccess";
+
+interface iAppProps {
+  data: AdminGetApprovedStudentsType;
+}
+
+export default function ApprovedStudents({ data }: iAppProps) {
+  return (
+    <div className="w-full space-y-2">
+      {/* Header */}
+      <div className="flex text-sm font-medium text-muted-foreground border-b pb-2">
+        <div className="w-1/3">Matric Number</div>
+        <div className="w-1/3 text-center">Faculty</div>
+        <div className="w-1/3 text-right">Action</div>
+      </div>
+
+      {/* Rows */}
+      {data?.length === 0 ? (
+        <p className="text-muted-foreground text-sm py-4">
+          No approved students yet
+        </p>
+      ) : (
+        data.map((student) => (
+          <div
+            key={student.id}
+            className="flex items-center border rounded-md px-3 py-2 hover:bg-muted/40 transition"
+          >
+            {/* Matric */}
+            <div className="w-1/3 font-medium">{student.matricNumber}</div>
+
+            {/* Faculty */}
+            <div className="w-1/3 text-center text-muted-foreground">
+              {student.faculty}
+            </div>
+
+            {/* Delete */}
+            <div className="w-1/3 flex justify-end">
+              <RevokeUserAccess student={student} />
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
 }

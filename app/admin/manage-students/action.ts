@@ -1,12 +1,12 @@
-"use server"
+"use server";
 
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { ApiResponse } from "@/lib/types";
 import { AddStudentSchema, AddStudentSchemaType } from "@/lib/zodSchema";
-
+import { revalidatePath } from "next/cache";
 export async function AddStudentAction(
-  values: AddStudentSchemaType
+  values: AddStudentSchemaType,
 ): Promise<ApiResponse> {
   const session = await requireAdmin();
 
@@ -66,6 +66,53 @@ export async function AddStudentAction(
     return {
       status: "error",
       message: "Failed to add student",
+    };
+  }
+}
+
+export async function RemoveStudentAccess(id: string): Promise<ApiResponse> {
+  try {
+    const session = await requireAdmin();
+
+    if (!session?.id) {
+      return {
+        status: "error",
+        message: "Unauthorized access",
+      };
+    }
+
+    if (!id) {
+      return {
+        status: "error",
+        message: "Invalid student ID",
+      };
+    }
+
+    const student = await prisma.approvedStudent.findUnique({
+      where: { id },
+    });
+
+    if (!student) {
+      return {
+        status: "error",
+        message: "Student not found",
+      };
+    }
+
+    await prisma.approvedStudent.delete({
+      where: { id },
+    });
+    revalidatePath("/admin/manage-students");
+    return {
+      status: "success",
+      message: "Student access revoked successfully",
+    };
+  } catch (error) {
+    console.log("Error removing student access:", error);
+
+    return {
+      status: "error",
+      message: "Failed to revoke student access",
     };
   }
 }

@@ -8,8 +8,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApprovedStudents from "./_components/ApprovedStudents";
 import AddStudentForm from "./_components/AddStudentForm";
+import { AdminGetApprovedStudents } from "@/app/data/admin/AdminGetApprovedStudents";
 
-export default function AddStudents() {
+export default async function AddStudents() {
+  const approvedStudents = await AdminGetApprovedStudents()
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -53,7 +55,7 @@ export default function AddStudents() {
             </CardHeader>
 
             <CardContent className="pt-2">
-              <ApprovedStudents />
+              <ApprovedStudents data={approvedStudents} />
             </CardContent>
           </Card>
         </TabsContent>
