@@ -25,6 +25,7 @@ model User {
   enrollment      Enrollment[]
   lectureProgress LectureProgress[]
   lecturerRequest LecturerRequest?
+  claimedApprovedStudent ApprovedStudent?
 
   @@map("user")
 }
@@ -290,6 +291,28 @@ model LecturerProfile {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+}
+
+
+model ApprovedStudent {
+  id String @id @default(uuid())
+
+  matricNumber String @unique
+
+  firstName  String
+  lastName   String
+  otherName  String?
+
+  faculty    String
+  department String
+
+  claimedByUserId String? @unique
+  claimedByUser   User?   @relation(fields: [claimedByUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([matricNumber])
 }
 
 enum RequestStatus {

@@ -115,9 +115,13 @@ export const ProfileSchema = z.object({
   department: z.string().min(1, { message: "Department is required" }),
   level: z.enum(courseLevel, { message: "Your Level is required" }),
   avatarKey: z.string().min(1, { message: "Profile Picture is required" }),
+
   matricNumber: z
     .string()
-    .min(9, { message: " Your Matric number is required" }),
+    .trim()
+    .regex(/^[A-Z]{2,5}\/\d{2}\/\d{3,5}$/, {
+      message: "Invalid matric number format (e.g. SEN/22/1234)",
+    }),
 });
 
 export const LecturerRequestSchema = z.object({
@@ -183,11 +187,7 @@ export const LecturerProfileSchema = z.object({
     message: "Employee ID must be at least 3 characters",
   }),
 
-  title: z.enum([
-    "PROF",
-    "LECTURER",
-    "ASSISTANT_LECTURER",
-  ]),
+  title: z.enum(["PROF", "LECTURER", "ASSISTANT_LECTURER"]),
 
   bio: z
     .string()
@@ -212,9 +212,34 @@ export const LecturerProfileSchema = z.object({
     .optional(),
 });
 
+export const AddStudentSchema = z.object({
+  firstName: z.string().trim().min(3, {
+    message: "First name must be at least 3 characters",
+  }),
+
+  lastName: z.string().trim().min(3, {
+    message: "Last name must be at least 3 characters",
+  }),
+
+  otherName: z.string().trim().optional(),
+
+  faculty: z.enum(faculties as [Faculty, ...Faculty[]]),
+
+  department: z.string().trim().min(1, {
+    message: "Department is required",
+  }),
+
+  matricNumber: z
+    .string()
+    .trim()
+    .regex(/^[A-Z]{2,5}\/\d{2}\/\d{3,5}$/, {
+      message: "Invalid matric number format (e.g. SEN/22/1234)",
+    }),
+});
 
 export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LectureSchemaType = z.infer<typeof LectureSchema>;
 export type ProfileSchemaType = z.infer<typeof ProfileSchema>;
 export type LecturerRequestSchemaType = z.infer<typeof LecturerRequestSchema>;
 export type LecturerProfileSchemaType = z.infer<typeof LecturerProfileSchema>;
+export type AddStudentSchemaType = z.infer<typeof AddStudentSchema>;

@@ -23,6 +23,7 @@ import {
   DatabaseIcon,
   FileChartColumnIcon,
   FileIcon,
+  UserPlus2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,9 +41,14 @@ const data = {
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Badge Requests",
+      title: "Manage Lecturers Request",
       url: "/admin/badge-requests",
       icon: <ChartBarIcon />,
+    },
+    {
+      title: "Manage Students",
+      url: "/admin/manage-students",
+      icon: <UserPlus2Icon />,
     },
   ],
   navClouds: [
