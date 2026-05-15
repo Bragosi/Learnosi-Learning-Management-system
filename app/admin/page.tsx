@@ -13,11 +13,12 @@ import {
   AdminCourseCardSkeleton,
 } from "./courses/_component/AdminCourseCard";
 import { Suspense } from "react";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export default async function AdminIndexPage() {
+  await requireAdmin()
   const enrollmentData = await AdminGetEnrollmentStats();
   const stats = await TotalAppUsers();
-  await requireRole([UserStatus.ADMIN]);
   return (
     <>
       <SectionCards stats={stats} />

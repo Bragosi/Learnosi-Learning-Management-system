@@ -9,16 +9,44 @@ export async function EditProfile(
   data: ProfileSchemaType,
 ): Promise<ApiResponse> {
   const session = await RequireUser();
+
   try {
+    if (!session?.id) {
+      return {
+        status: "error",
+        message: "Unauthorized access",
+      };
+    }
+
     const result = ProfileSchema.safeParse(data);
+
     if (!result.success) {
       return {
         status: "error",
         message: "Invalid data",
       };
     }
+
+    // CHECK IF STUDENT IS APPROVED
+    const approvedStudent = await prisma.approvedStudent.findUnique({
+      where: {
+        matricNumber: result.data.matricNumber,
+      },
+    });
+
+    if (!approvedStudent) {
+      return {
+        status: "error",
+        message:
+          "Your matric number is not authorized. Contact the administrator.",
+      };
+    }
+
+    // FIND PROFILE
     const profile = await prisma.profile.findUnique({
-      where: { userId: session.id },
+      where: {
+        userId: session.id,
+      },
     });
 
     if (!profile) {
@@ -28,18 +56,22 @@ export async function EditProfile(
       };
     }
 
+    // UPDATE PROFILE
     await prisma.profile.update({
-      where: { id: profile.id },
+      where: {
+        id: profile.id,
+      },
       data: result.data,
     });
+
     return {
       status: "success",
-      message: "Profile Update Successful",
+      message: "Profile updated successfully",
     };
   } catch {
     return {
       status: "error",
-      message: "Failed to update Profile",
+      message: "Failed to update profile",
     };
   }
 }

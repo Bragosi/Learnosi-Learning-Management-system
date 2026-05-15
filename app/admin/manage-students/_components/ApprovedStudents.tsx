@@ -2,6 +2,7 @@
 
 import { AdminGetApprovedStudentsType } from "@/app/data/admin/AdminGetApprovedStudents";
 import { RevokeUserAccess } from "./RevokeUserAccess";
+import { EmptyState } from "@/components/general/EmptyState";
 
 interface iAppProps {
   data: AdminGetApprovedStudentsType;
@@ -19,9 +20,12 @@ export default function ApprovedStudents({ data }: iAppProps) {
 
       {/* Rows */}
       {data?.length === 0 ? (
-        <p className="text-muted-foreground text-sm py-4">
-          No approved students yet
-        </p>
+        <EmptyState
+          title="No Approved Students"
+          description={"Give students authorization to Learnosi"}
+          buttonText={"Add student"}
+          href={""}
+        />
       ) : (
         data.map((student) => (
           <div

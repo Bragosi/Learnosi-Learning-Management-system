@@ -5,8 +5,10 @@ import {
   LecturerRequestCard,
   LecturerRequestCardSkeleton,
 } from "./_components/LecturerRequestCard";
+import { requireAdminCompleteProfile } from "@/lib/requireAdminCompleteProfile";
 
 export default async function BadgeRequestsPage() {
+  await requireAdminCompleteProfile()
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -35,7 +37,7 @@ async function RenderBadgeRequests() {
           title="No Badge Requests"
           description="There are no badge requests to display."
           buttonText="Back to Dashboard"
-          href="/admin/dashboard"
+        href="/admin"
         />
       ) : (
         <div>

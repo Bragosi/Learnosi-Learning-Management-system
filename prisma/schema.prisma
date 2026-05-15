@@ -18,6 +18,7 @@ model User {
 
   profile         Profile?
   lecturerProfile LecturerProfile?
+  adminProfile AdminProfile?
 
   sessions        Session[]
   accounts        Account[]
@@ -267,6 +268,38 @@ model LecturerProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title LecturerPost
+
+  profilePicture String
+
+  firstName String
+  lastName  String
+  otherName String?
+
+  employeeId String @unique
+
+  bio String?
+
+  department String
+  faculty    String
+
+  officeLocation String?
+
+  email String
+
+  verified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model AdminProfile {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 
   profilePicture String
 

@@ -1,34 +1,39 @@
 "use client";
 
-import { GetMyProfileType } from "@/app/data/user/GetMyProfile";
-import { EmptyState } from "@/components/general/EmptyState";
-import { Card, CardContent } from "@/components/ui/card";
-import { useConstructUrl } from "@/hooks/useContructUrl";
 import Image from "next/image";
+import Link from "next/link";
+
+import { GetMyProfileType } from "@/app/data/user/GetMyProfile";
+
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
 import {
   BookOpen,
   School,
-  User,
+  User2,
   Edit,
   Phone,
   GraduationCap,
 } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
+
+import { EmptyState } from "@/components/general/EmptyState";
+import { useConstructUrl } from "@/hooks/useContructUrl";
 import { levelLabels } from "@/lib/zodSchema";
-import { cn } from "@/lib/utils";
 
 interface iAppProps {
   data: GetMyProfileType;
 }
 
 export default function ProfileClient({ data }: iAppProps) {
-  const avatarKey = data.profile?.avatarKey || "";
-  const constructedUrl = useConstructUrl(avatarKey);
-  console.log(constructedUrl);
+  const profile = data.profile;
 
-  if (!data.profile) {
+  const avatarKey = profile?.avatarKey || "";
+  const profileKey = useConstructUrl(avatarKey);
+
+  if (!profile) {
     return (
       <EmptyState
         title="You do not have a profile yet"
@@ -39,146 +44,154 @@ export default function ProfileClient({ data }: iAppProps) {
     );
   }
 
-  const profile = data.profile;
-  const thumbnailUrl = profile.avatarKey
-    ? constructedUrl
-    : "/avatar-placeholder.png";
-
   return (
-    <div className="min-h-screen bg-muted/30 py-10 px-4 flex items-center justify-center">
-      <div className="w-full max-w-md min-h-screen sm:max-w-lg">
-        {/* Main Profile Card */}
-        <Card className="overflow-hidden flex items-center justify-center mt-8 border-none shadow-xl bg-card">
-          {/* Decorative Header/Banner */}
-          <div className="h-32 w-full bg-linear-to-r from-primary/80 to-primary" />
+    <div className="min-h-screen bg-muted/40 px-4 py-10">
+      <div className="mx-auto w-full max-w-4xl space-y-6">
+        {/* HEADER CARD */}
+        <Card className="overflow-hidden border shadow-sm">
+          <CardHeader className="bg-background p-6 sm:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              {/* PROFILE INFO */}
+              <div className="flex items-center gap-4">
+                <div className="relative size-20 overflow-hidden rounded-full border bg-muted">
+                  {profile.avatarKey ? (
+                    <Image
+                      src={profileKey}
+                      alt="profile"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User2 className="m-auto size-10 text-muted-foreground" />
+                  )}
+                </div>
 
-          <CardContent className="relative pt-0">
-            {/* Avatar - Floating Half-way */}
-            <div className="relative -mt-12 mb-4 flex justify-between items-end px-2 sm:px-6">
-              <div className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-2xl overflow-hidden border-4 border-card shadow-lg">
-                <Image
-                  src={thumbnailUrl}
-                  alt="profile image"
-                  fill
-                  sizes="(max-width: 640px) 96px, 128px"
-                  className="object-cover"
-                />
+                <div className="space-y-1">
+                  <h1 className="text-2xl font-bold">
+                    {profile.firstName} {profile.lastName}
+                  </h1>
+
+                  <p className="text-sm text-muted-foreground">
+                    {profile.matricNumber}
+                  </p>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge className="bg-primary">
+                      {profile.department}
+                    </Badge>
+
+                    <Badge variant="secondary">
+                      {levelLabels[profile.level]}
+                    </Badge>
+                  </div>
+                </div>
               </div>
 
+              {/* EDIT BUTTON */}
               <Link
+                className={buttonVariants()}
                 href="/profile/EditProfile"
-                className={
-                  buttonVariants({ variant: "outline", size: "sm" }) +
-                  " mb-2 gap-2 shadow-sm"
-                }
               >
-                <Edit className="w-4 h-4" />
-                <span className="hidden sm:inline">Edit Profile</span>
+                <Edit className="mr-2 size-4" />
+                Edit Profile
               </Link>
             </div>
+          </CardHeader>
+        </Card>
 
-            {/* Profile Identity */}
-            <div className="px-2 sm:px-6 space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                {profile.firstName} {profile.lastName} {profile.otherName}
-              </h1>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <GraduationCap className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">
-                  {profile.matricNumber || "No matric number"}
-                </span>
-              </div>
+        {/* DETAILS GRID */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* PERSONAL INFO */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-semibold text-primary">
+                Personal Information
+              </h2>
+            </CardHeader>
 
-              <div className="mt-6">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                  About
-                </h3>
-                <p className="text-muted-foreground mb-2 leading-relaxed">
-                  {profile.bio || "This user hasn't added a bio yet."}
-                </p>
-              </div>
-            </div>
+            <CardContent className="space-y-4">
+              <InfoRow label="Full Name">
+                {profile.firstName} {profile.lastName}{" "}
+                {profile.otherName || ""}
+              </InfoRow>
 
-            <Separator className="my-8" />
+              <InfoRow label="Matric Number">
+                <GraduationCap className="mr-2 size-4 text-primary" />
+                {profile.matricNumber}
+              </InfoRow>
 
-            {/* Stats/Info Grid */}
-            <div className="px-2 mt-6 sm:px-6 grid grid-cols-1 md:grid-cols-2  gap-6 pb-6">
-              {/* Academic Info Group */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <User className="text-primary w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase">
-                      Current Level
-                    </p>
-                    <p className="text-sm font-semibold">
-                      {levelLabels[profile.level] || "Not set"}
-                    </p>
-                  </div>
-                </div>
+              <InfoRow label="Phone Number">
+                <Phone className="mr-2 size-4 text-primary" />
+                {profile.phone || "Not set"}
+              </InfoRow>
+            </CardContent>
+          </Card>
 
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <School className="text-primary w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase">
-                      Faculty
-                    </p>
-                    <p className="text-sm font-semibold">
-                      {profile.faculty || "Not set"}
-                    </p>
-                  </div>
-                </div>
-              </div>
+          {/* ACADEMIC INFO */}
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-semibold text-primary">
+                Academic Information
+              </h2>
+            </CardHeader>
 
-              {/* Contact/Department Info Group */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <BookOpen className="text-primary w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase">
-                      Department
-                    </p>
-                    <p className="text-sm font-semibold">
-                      {profile.department || "Not set"}
-                    </p>
-                  </div>
-                </div>
+            <CardContent className="space-y-4">
+              <InfoRow label="Faculty">
+                <School className="mr-2 size-4 text-primary" />
+                {profile.faculty}
+              </InfoRow>
 
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Phone className="text-primary w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase">
-                      Contact Number
-                    </p>
-                    <p className="text-sm font-semibold">
-                      {profile.phone || "Not provided"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <InfoRow label="Department">
+                <BookOpen className="mr-2 size-4 text-primary" />
+                {profile.department}
+              </InfoRow>
+
+              <InfoRow label="Level">
+                <GraduationCap className="mr-2 size-4 text-primary" />
+                {levelLabels[profile.level]}
+              </InfoRow>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* BIO */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-primary">
+              About
+            </h2>
+          </CardHeader>
+
+          <CardContent>
+            <p className="text-sm leading-6 text-muted-foreground">
+              {profile.bio || "No bio provided yet."}
+            </p>
           </CardContent>
-          <div className="mt-2 p-4">
-            <Link className={cn(buttonVariants(), "w-full mb-2")} href="/">
-              Back to Home page
-            </Link>
-            <Link
-              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-              href="/profile/request-lecturer-badge"
-            >
-              Not a student? Request Lecturer Badge
-            </Link>
-          </div>
         </Card>
       </div>
+    </div>
+  );
+}
+
+/* Reusable Row Component */
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-xs text-muted-foreground">
+        {label}
+      </span>
+
+      <div className="flex items-center text-sm font-medium">
+        {children}
+      </div>
+
+      <Separator />
     </div>
   );
 }

@@ -9,13 +9,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditCourseForm } from "./_component/EditCourseForm";
 import CourseStructure from "./_component/CourseStructure";
-import { requireRole } from "@/lib/requireRole";
-import { UserStatus } from "@prisma/client";
+import { requireLectureCompleteProfile } from "@/lib/requireLecturerCompleteProfile";
 
 type Params = Promise<{ courseId: string }>;
 
 export default async function EditRoute({ params }: { params: Params }) {
-  await requireRole([UserStatus.LECTURER]);
+  await requireLectureCompleteProfile()
   const { courseId } = await params;
 
   const data = await AdminGetSingleCourse(courseId);

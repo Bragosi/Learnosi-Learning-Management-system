@@ -20,10 +20,12 @@ import { RequireUser } from "@/app/data/user/requireUser";
 import { prisma } from "@/lib/prisma";
 import EnrollButton from "./_component/EnrollButton";
 import { Button } from "@/components/ui/button";
+import { requireCompleteProfile } from "@/lib/requireCompleteProfile";
 
 type Params = Promise<{ slug: string }>;
 
 export default async function SlugPage({ params }: { params: Params }) {
+  await requireCompleteProfile()
   const { slug } = await params;
   const course = await GetPublicSingleCourse(slug);
 

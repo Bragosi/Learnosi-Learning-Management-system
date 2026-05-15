@@ -24,6 +24,7 @@ import {
   FileChartColumnIcon,
   FileIcon,
   UserPlus2Icon,
+  UserCircle,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -49,6 +50,11 @@ const data = {
       title: "Manage Students",
       url: "/admin/manage-students",
       icon: <UserPlus2Icon />,
+    },
+        {
+      title: "Profile",
+      url: "/admin/profile",
+      icon: <UserCircle />,
     },
   ],
   navClouds: [

@@ -1,9 +1,8 @@
-import { requireRole } from "@/lib/requireRole";
-import { UserStatus } from "@prisma/client";
+import { requireLectureCompleteProfile } from "@/lib/requireLecturerCompleteProfile";
 import CreateCourseClient from "./CreateCourseClient";
 
 export default async function CreateCoursePage() {
-  await requireRole([UserStatus.LECTURER]);
+  await requireLectureCompleteProfile()
 
   return <CreateCourseClient />;
 }

@@ -5,11 +5,7 @@ import {
 } from "./_component/AdminCourseCard";
 import { EmptyState } from "@/components/general/EmptyState";
 import { Suspense } from "react";
-import { UserStatus } from "@prisma/client";
-import { requireRole } from "@/lib/requireRole";
 export default async function CoursesPage() {
-  await requireRole([UserStatus.ADMIN]);
-
   return (
     <div className="space-y-8">
       {/* Header */}

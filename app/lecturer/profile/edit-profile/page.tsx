@@ -1,5 +1,7 @@
-import EditLecturerProfileClient from "./EditLecturerProfileClient";
+import { GetLecturerProfile } from "@/app/data/lecturer/GetLecturerProfile";
+import EditLecturerProfileClient from "./_components/EditLecturerProfileClient";
 
-export default function EditLecturerProfile(){
-    return <EditLecturerProfileClient/>
+export default async function EditLecturerProfile(){
+    const data = await GetLecturerProfile()
+    return <EditLecturerProfileClient data={data}/>
 }

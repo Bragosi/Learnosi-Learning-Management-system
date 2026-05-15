@@ -1,14 +1,12 @@
 import { redirect } from "next/navigation";
 
-import { UserStatus } from "@prisma/client";
-
-import { requireRole } from "@/lib/requireRole";
 import { isLecturerProfileComplete } from "@/lib/profileStatus";
 
-import { GetLecturerProfile } from "./GetLecturerProfile";
+import { GetLecturerProfile } from "../data/lecturer/GetLecturerProfile";
+import { requireLecturer } from "@/lib/requireLecturer";
 
 export default async function LecturerPage() {
-  await requireRole([UserStatus.LECTURER]);
+  await requireLecturer()
 
   const data = await GetLecturerProfile();
 

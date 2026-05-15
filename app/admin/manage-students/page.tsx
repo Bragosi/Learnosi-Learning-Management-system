@@ -9,8 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApprovedStudents from "./_components/ApprovedStudents";
 import AddStudentForm from "./_components/AddStudentForm";
 import { AdminGetApprovedStudents } from "@/app/data/admin/AdminGetApprovedStudents";
+import { requireAdminCompleteProfile } from "@/lib/requireAdminCompleteProfile";
 
 export default async function AddStudents() {
+  await requireAdminCompleteProfile()
   const approvedStudents = await AdminGetApprovedStudents()
   return (
     <div className="space-y-6">

@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { prisma } from "@/lib/prisma";
 import { requireLecturer } from "@/lib/requireLecturer";
@@ -53,5 +53,6 @@ export async function GetLecturerProfile() {
   return user;
 }
 
-export type GetLecturerProfileType =
-  Awaited<ReturnType<typeof GetLecturerProfile>>;
+export type GetLecturerProfileType = Awaited<
+  ReturnType<typeof GetLecturerProfile>
+>;

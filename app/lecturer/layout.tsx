@@ -2,8 +2,10 @@ import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 import { LecturerAppSidebar } from "./_components/LecturerAppSideBar";
+import { requireLecturer } from "@/lib/requireLecturer";
 
-export default function LecturerLayout({children} : {children : ReactNode}){
+export default async function LecturerLayout({children} : {children : ReactNode}){
+  await requireLecturer()
     return (
         <SidebarProvider
       style={

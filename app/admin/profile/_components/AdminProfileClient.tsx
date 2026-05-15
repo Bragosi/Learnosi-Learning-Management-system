@@ -1,9 +1,8 @@
+
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-
-import { GetLecturerProfileType } from "../../../data/lecturer/GetLecturerProfile";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -21,13 +20,14 @@ import {
 } from "lucide-react";
 import { EmptyState } from "@/components/general/EmptyState";
 import { useConstructUrl } from "@/hooks/useContructUrl";
+import { GetAdminProfileType } from "@/app/data/admin/GetAdminProfile";
 
 interface iAppProps {
-  data: GetLecturerProfileType;
+  data: GetAdminProfileType;
 }
 
-export default function LecturerProfileClient({ data }: iAppProps) {
-  const profile = data.lecturerProfile;
+export default function AdminProfileClient({ data }: iAppProps) {
+  const profile = data.adminProfile;
   const avartarKey = profile?.profilePicture || " ";
   const profilekey = useConstructUrl(avartarKey);
 
@@ -69,10 +69,6 @@ export default function LecturerProfileClient({ data }: iAppProps) {
                     {profile.firstName} {profile.lastName}
                   </h1>
 
-                  <p className="text-sm text-muted-foreground">
-                    {profile.title}
-                  </p>
-
                   <div className="flex items-center gap-2">
                     <Badge className="bg-primary">{profile.department}</Badge>
 
@@ -87,7 +83,7 @@ export default function LecturerProfileClient({ data }: iAppProps) {
               </div>
 
               {/* EDIT BUTTON */}
-              <Link className={buttonVariants()} href="/lecturer/profile/edit-profile">
+              <Link className={buttonVariants()} href="/admin/profile/edit-profile">
                 <Edit />
                 Edit Profile
               </Link>

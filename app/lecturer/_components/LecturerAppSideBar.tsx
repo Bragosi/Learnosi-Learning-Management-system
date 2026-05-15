@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
-import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -15,8 +14,6 @@ import {
 import {
   LayoutDashboardIcon,
   ListIcon,
-  FolderIcon,
-  UsersIcon,
   CameraIcon,
   FileTextIcon,
   Settings2Icon,
@@ -46,16 +43,6 @@ const data = {
       title: "My Courses",
       url: "/lecturer/courses",
       icon: <ListIcon />,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
     },
   ],
   navClouds: [

@@ -5,6 +5,7 @@ import PublicCourseCard from "../(home)/_components/PublicCourseCard";
 import CourseProgressCard from "./_components/CourseProgressCard";
 
 export default async function DashboardPage() {
+  
   const [courses, enrolledCourses] = await Promise.all([
     GetAllCourses(),
     GetEnrolledCourses(),

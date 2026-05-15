@@ -2,11 +2,13 @@
 
 import { RequireUser } from "@/app/data/user/requireUser";
 import { prisma } from "@/lib/prisma";
+import { requireCompleteProfile } from "@/lib/requireCompleteProfile";
 import { ApiResponse } from "@/lib/types";
 
 export async function EnrollInCourseAction(
   courseId: string,
 ): Promise<ApiResponse> {
+  await requireCompleteProfile()
   try {
     const user = await RequireUser();
 

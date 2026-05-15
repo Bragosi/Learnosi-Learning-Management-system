@@ -3,17 +3,16 @@ import Link from "next/link";
 import { PlusCircleIcon } from "lucide-react";
 import { EmptyState } from "@/components/general/EmptyState";
 import { Suspense } from "react";
-import { UserStatus } from "@prisma/client";
-import { requireRole } from "@/lib/requireRole";
 import {
   LecturerCoursecard,
   LecturerCourseCardSkeleton,
 } from "./_components/LecturerCourseCard";
 import { lecturerGetCourses } from "@/app/data/lecturer/lecturerGetCourses";
+import { requireLecturer } from "@/lib/requireLecturer";
+import { requireLectureCompleteProfile } from "@/lib/requireLecturerCompleteProfile";
 
 export default async function CoursesPage() {
-  await requireRole([UserStatus.LECTURER]);
-
+  await requireLectureCompleteProfile()
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -42,7 +41,7 @@ export default async function CoursesPage() {
 }
 
 async function RenderCourses() {
-  const user = await requireRole([UserStatus.LECTURER]);
+  const user = await requireLecturer();
 
   const data = await lecturerGetCourses(user.id);
   return (

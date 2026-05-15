@@ -3,6 +3,7 @@ import PublicCourseCard, {
   PublicCourseCardSkeleton,
 } from "../_components/PublicCourseCard";
 import { Suspense } from "react";
+import { requireCompleteProfile } from "@/lib/requireCompleteProfile";
 
 export default function PublicCoursesroute() {
   return (
@@ -24,6 +25,7 @@ export default function PublicCoursesroute() {
 }
 
 async function RenderPublicCourses() {
+  await requireCompleteProfile()
   const courses = await GetAllCourses();
 
   return (
